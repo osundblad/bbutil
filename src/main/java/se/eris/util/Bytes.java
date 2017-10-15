@@ -51,12 +51,11 @@ public class Bytes {
     public static byte[] toByteArray(final int i, final ByteOrder format) {
         final byte[] ba = new byte[4];
         if (ByteOrder.LITTLE_ENDIAN.equals(format)) {
-            return ByteFormat.INT_LITTLE_ENDIAN.asArray(i);
+            return ByteOrderInt.LITTLE_ENDIAN.asArray(i);
         } else if (ByteOrder.BIG_ENDIAN.equals(format)) {
-            return ByteFormat.INT_BIG_ENDIAN.asArray(i);
+            return ByteOrderInt.BIG_ENDIAN.asArray(i);
         }
         throw new IllegalArgumentException("Unknown byte order: " + format);
-
     }
 
     /**
@@ -113,8 +112,7 @@ public class Bytes {
     }
 
     /**
-     * Changes the byte order from little-endian to big- endian or vice
-     * versa.
+     * Changes the byte order from little-endian to big- endian or vice versa.
      *
      * @param i the <code>int</code> to reverse the byte order of.
      * @return the <code>int</code> i with reversed byte order.
@@ -195,9 +193,9 @@ public class Bytes {
      */
     public static int toInt(final byte[] ba, final int offset, final ByteOrder format) {
         if (ByteOrder.LITTLE_ENDIAN.equals(format)) {
-            return ByteFormat.INT_LITTLE_ENDIAN.asInt(ba, offset);
+            return ByteOrderInt.LITTLE_ENDIAN.asInt(ba, offset);
         } else if (ByteOrder.BIG_ENDIAN.equals(format)) {
-            return ByteFormat.INT_BIG_ENDIAN.asInt(ba, offset);
+            return ByteOrderInt.BIG_ENDIAN.asInt(ba, offset);
         }
         throw new IllegalArgumentException("Unknown byte order: " + format);
     }

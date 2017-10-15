@@ -4,7 +4,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("MagicNumber")
 public class ByteArrayIteratorTest {
@@ -54,8 +56,8 @@ public class ByteArrayIteratorTest {
         final byte[] bytes = {0, 1, 2, 3};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
-        assertEquals(0x01_00, iterator.nextShort(ByteFormat.SHORT_LITTLE_ENDIAN));
-        assertEquals(0x03_02, iterator.nextShort(ByteFormat.SHORT_LITTLE_ENDIAN));
+        assertEquals(0x01_00, iterator.nextShort(ByteOrderShort.LITTLE_ENDIAN));
+        assertEquals(0x03_02, iterator.nextShort(ByteOrderShort.LITTLE_ENDIAN));
 
         assertFalse(iterator.hasNext());
     }
@@ -75,7 +77,7 @@ public class ByteArrayIteratorTest {
         final byte[] bytes = {0, 1, 2, 3};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
-        assertEquals(0x03_02_01_00, iterator.nextInt(ByteFormat.INT_LITTLE_ENDIAN));
+        assertEquals(0x03_02_01_00, iterator.nextInt(ByteOrderInt.LITTLE_ENDIAN));
 
         assertFalse(iterator.hasNext());
     }

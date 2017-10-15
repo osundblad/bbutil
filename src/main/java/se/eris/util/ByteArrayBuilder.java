@@ -1,6 +1,5 @@
 package se.eris.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.IntUnaryOperator;
 
@@ -38,17 +37,11 @@ public class ByteArrayBuilder {
     }
 
     public void append(final short s) {
-        checkIncreaseCapacity(2);
-        bytes[written++] = (byte) (s >>> 8);
-        bytes[written++] = (byte) (s);
+        appendShort(s);
     }
 
     public void append(final int i) {
-        checkIncreaseCapacity(4);
-        bytes[written++] = (byte) (i >>> 24);
-        bytes[written++] = (byte) (i >>> 16);
-        bytes[written++] = (byte) (i >>> 8);
-        bytes[written++] = (byte) (i);
+        appendInt(i);
     }
 
     /**
@@ -83,10 +76,14 @@ public class ByteArrayBuilder {
         bytes[written++] = (byte) i;
     }
 
-    public void appendShort(final int i) {
+    public void appendShort(final int s) {
+        appendShort(s, ByteOrderShort.BIG_ENDIAN);
+    }
+
+    public void appendShort(final int s, final ByteOrderShort format) {
         checkIncreaseCapacity(2);
-        bytes[written++] = (byte) (i >>> 8);
-        bytes[written++] = (byte) i;
+        System.arraycopy(format.asArray(s), 0, bytes, written, 2);
+        written += 2;
     }
 
     /**
@@ -94,8 +91,14 @@ public class ByteArrayBuilder {
      * @param i the integer to append
      * @see #append(int)
      */
-    public void appendInteger(final int i) {
-        append(i);
+    public void appendInt(final int i) {
+        appendInt(i, ByteOrderInt.BIG_ENDIAN);
+    }
+
+    public void appendInt(final int i, final ByteOrderInt format) {
+        checkIncreaseCapacity(4);
+        System.arraycopy(format.asArray(i), 0, bytes, written, 4);
+        written += 4;
     }
 
     /**
@@ -112,7 +115,6 @@ public class ByteArrayBuilder {
     }
 
     public int size() {
-        new ArrayList<>().add(new Object());
         return written;
     }
 

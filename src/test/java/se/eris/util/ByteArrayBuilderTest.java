@@ -22,9 +22,27 @@ public class ByteArrayBuilderTest {
     private static final short SHORT_1 = 0x01_00;
     private static final short SHORT_2 = (short) 0xff_00;
     private static final short SHORT_3 = (short) 0xf0_01;
+    private static final long LONG_1 = 0x01_02_03_04_05_06_07_08L;
 
     @Rule
     public final ExpectedException exception = ExpectedException.none();
+
+    @Test
+    public void new_defaultSize() {
+        assertEquals(16, new ByteArrayBuilder().capacity());
+    }
+
+    @Test
+    public void new_defaultGrowFunction() {
+        final ByteArrayBuilder builder = new ByteArrayBuilder(4);
+        assertEquals(4, builder.capacity());
+        builder.appendInt(4);
+        builder.appendByte(1);
+        assertEquals(6, builder.capacity());
+        builder.appendByte(1);
+        builder.appendByte(1);
+        assertEquals(9, builder.capacity());
+    }
 
     @Test
     public void new_byteArray_extraCapacity_shouldHaveInitialCapacity() {
@@ -111,6 +129,15 @@ public class ByteArrayBuilderTest {
     }
 
     @Test
+    public void appendLong() {
+        final ByteArrayBuilder builder = new ByteArrayBuilder(7);
+
+        builder.appendLong(LONG_1);
+
+        ByteArrayTestUtil.assertArrays(new byte[]{(byte) 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08}, builder.asBytes());
+    }
+
+    @Test
     public void grow_oneByteAtTheTime() {
         final ByteArrayBuilder builder = new ByteArrayBuilder(0);
 
@@ -120,6 +147,14 @@ public class ByteArrayBuilderTest {
         }
 
         assertEquals(10, builder.grow(0));
+    }
+
+    @Test
+    public void grow_overIntegerMaxValue() {
+        final ByteArrayBuilder builder = new ByteArrayBuilder();
+        exception.expect(IllegalArgumentException.class);
+        exception.expectMessage("Cannot allocate array with size greater than Integer.MAX_VALUE");
+        builder.grow(Integer.MAX_VALUE - 10);
     }
 
     @Test

@@ -15,25 +15,29 @@ public class ByteArrayIterator {
         return index < bytes.length;
     }
 
+    public boolean hasNext(final int n) {
+        return index + n <= bytes.length;
+    }
+
     public byte next() {
         return bytes[index++];
     }
 
     public short nextShort() {
-        return nextShort(ByteFormat.SHORT_BIG_ENDIAN);
+        return nextShort(ByteOrderShort.BIG_ENDIAN);
     }
 
-    public short nextShort(final ByteFormat byteFormat) {
+    public short nextShort(final ByteOrderShort byteFormat) {
         final short s = byteFormat.asShort(bytes, index);
         index += 2;
         return s;
     }
 
     public int nextInt() {
-        return nextInt(ByteFormat.INT_BIG_ENDIAN);
+        return nextInt(ByteOrderInt.BIG_ENDIAN);
     }
 
-    public int nextInt(final ByteFormat byteFormat) {
+    public int nextInt(final ByteOrderInt byteFormat) {
         final int i = (byteFormat.asInt(bytes, index));
         index += 4;
         return i;
