@@ -31,17 +31,20 @@ public class ByteArrayBuilder {
         written = bytes.length;
     }
 
-    public void append(final byte b) {
+    public ByteArrayBuilder append(final byte b) {
         checkIncreaseCapacity(1);
         bytes[written++] = b;
+        return this;
     }
 
-    public void append(final short s) {
+    public ByteArrayBuilder append(final short s) {
         appendShort(s);
+        return this;
     }
 
-    public void append(final int i) {
+    public ByteArrayBuilder append(final int i) {
         appendInt(i);
+        return this;
     }
 
     /**
@@ -49,11 +52,12 @@ public class ByteArrayBuilder {
      * @param f the float to append
      * @see Float#floatToRawIntBits(float)
      */
-    public void append(final float f) {
+    public ByteArrayBuilder append(final float f) {
         append(Float.floatToRawIntBits(f));
+        return this;
     }
 
-    public void append(final long l) {
+    public ByteArrayBuilder append(final long l) {
         checkIncreaseCapacity(8);
         bytes[written++] = (byte) (l >>> 56);
         bytes[written++] = (byte) (l >>> 48);
@@ -63,27 +67,32 @@ public class ByteArrayBuilder {
         bytes[written++] = (byte) (l >>> 16);
         bytes[written++] = (byte) (l >>> 8);
         bytes[written++] = (byte) (l);
+        return this;
     }
 
-    public void append(final byte[] bytes) {
+    public ByteArrayBuilder append(final byte[] bytes) {
         checkIncreaseCapacity(bytes.length);
         System.arraycopy(bytes, 0, this.bytes, written, bytes.length);
         written += bytes.length;
+        return this;
     }
 
-    public void appendByte(final int i) {
+    public ByteArrayBuilder appendByte(final int i) {
         checkIncreaseCapacity(1);
         bytes[written++] = (byte) i;
+        return this;
     }
 
-    public void appendShort(final int s) {
+    public ByteArrayBuilder appendShort(final int s) {
         appendShort(s, ByteOrderShort.BIG_ENDIAN);
+        return this;
     }
 
-    public void appendShort(final int s, final ByteOrderShort format) {
+    public ByteArrayBuilder appendShort(final int s, final ByteOrderShort format) {
         checkIncreaseCapacity(2);
         System.arraycopy(format.asArray(s), 0, bytes, written, 2);
         written += 2;
+        return this;
     }
 
     /**
@@ -91,14 +100,16 @@ public class ByteArrayBuilder {
      * @param i the integer to append
      * @see #append(int)
      */
-    public void appendInt(final int i) {
+    public ByteArrayBuilder appendInt(final int i) {
         appendInt(i, ByteOrderInt.BIG_ENDIAN);
+        return this;
     }
 
-    public void appendInt(final int i, final ByteOrderInt format) {
+    public ByteArrayBuilder appendInt(final int i, final ByteOrderInt format) {
         checkIncreaseCapacity(4);
         System.arraycopy(format.asArray(i), 0, bytes, written, 4);
         written += 4;
+        return this;
     }
 
     /**
@@ -106,8 +117,14 @@ public class ByteArrayBuilder {
      * @param l the long to append
      * @see #append(long)
      */
-    public void appendLong(final long l) {
+    public ByteArrayBuilder appendLong(final long l) {
         append(l);
+        return this;
+    }
+
+    public ByteArrayBuilder appendHex(final String hexString) {
+        append(Bytes.hexToByteArray(hexString));
+        return this;
     }
 
     public byte[] asBytes() {

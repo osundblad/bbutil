@@ -138,6 +138,14 @@ public class ByteArrayBuilderTest {
     }
 
     @Test
+    public void appendLong_withSignBitSet() {
+        final ByteArrayBuilder builder = new ByteArrayBuilder(7);
+
+        builder.appendLong(0xff_00_00_00_00_00_ff_00L);
+        ByteArrayTestUtil.assertArrays(new byte[]{(byte) 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xff, 0x00}, builder.asBytes());
+    }
+
+    @Test
     public void grow_oneByteAtTheTime() {
         final ByteArrayBuilder builder = new ByteArrayBuilder(0);
 
@@ -186,6 +194,17 @@ public class ByteArrayBuilderTest {
         exception.expect(IllegalArgumentException.class);
         exception.expectMessage("Cannot allocate array with size greater than Integer.MAX_VALUE");
         builder.grow(Integer.MAX_VALUE);
+    }
+
+    @Test
+    public void appendHex() {
+        final ByteArrayBuilder builder = new ByteArrayBuilder();
+        builder.appendHex("1234567890ABCDEF");
+
+        final byte[] bytes = builder.asBytes();
+
+        final byte[] expected = {18, 52, 86, 120, -112, -85, -51, -17};
+        assertTrue(String.format("Got: %s but expected %s", Arrays.toString(bytes), Arrays.toString(expected)), Arrays.equals(bytes, expected));
     }
 
 }

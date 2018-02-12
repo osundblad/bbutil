@@ -1,24 +1,20 @@
+/*
+ * Copyright Eris IT AB 2001-2018
+ */
 package se.eris.util;
 
-import java.util.function.IntFunction;
-
 /**
- * <p>Copyright Eris IT AB 2001-2017
- * <p>
- * <p>This is a small utility class for working with numbers on different
- * platforms and languages (mainly Java and C/C++). There are methods for
- * converting from/to little/big endians, converting integers and floats to byte
- * arrays etc. if Something important is missing please let me know and I'll try
- * to add it to the next version.</p>
- * <p>
- * <p>Note: if you used version 1.0 throw it away and start using this  one
- * immediately, since everything about byte ordering was wrong in version 1 (it
- * worked if the machines used the same byte order).</p>
+ * This is a small utility for communication between different platforms
+ * and/or languages. There are methods for converting to/from little/big
+ * endian, converting integers and floats to/from byte arrays etc.
+ *
+ * If something important is missing please let me know and I'll try to add
+ * it to the next version.
  *
  * @author <a href="mailto:olle.sundblad@eris.se">Olle Sundblad</a>
- * @version 2.0
+ * @version 2.1
  */
-public abstract class Bits {
+public final class Bits {
 
     /**
      * <p>Constructor that suppress a default constructor, to enforce noninstantiability.</p>
@@ -77,7 +73,7 @@ public abstract class Bits {
      * @param ba        the <code>byte[]</code> to be converted.
      * @param byteSpace the spacing to use between each byte.
      * @return a string representation of the argument in base 2.
-     * @see ByteArrayFormatter#of(IntFunction, IntFunction)
+     * @see ByteArrayFormatter#of(ByteArrayFormatter.ByteFormatFunction, ByteArrayFormatter.IndexFunction)
      */
     public static String toBitString(final byte[] ba, final String byteSpace) {
         return ByteArrayFormatter.of(ByteArrayFormatter.FORMAT_BITS, (i) -> byteSpace).asString(ba);
@@ -157,6 +153,5 @@ public abstract class Bits {
     public static int setBit(final int source, final int bit, final boolean value) {
         return value ? source | (1 << bit) : source & ~(1 << bit);
     }
-
 
 }

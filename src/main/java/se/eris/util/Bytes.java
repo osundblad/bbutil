@@ -100,6 +100,30 @@ public class Bytes {
         return toByteArray(i, format);
     }
 
+    public static byte[] hexToByteArray(final String hexString) {
+        final int length = hexString.length();
+
+        if (length % 2 != 0) {
+            throw new IllegalArgumentException(String.format("hexString (%s) should have even length: %d", hexString, length));
+        }
+
+        final byte[] bytes = new byte[length / 2];
+
+        for (int i = 0; i < length; i += 2) {
+            final Nibble highBits = Nibble.fromHexChar(hexString.charAt(i));
+            final Nibble lowBits = Nibble.fromHexChar(hexString.charAt(i + 1));
+
+            bytes[i / 2] = Bytes.toByte(highBits, lowBits);
+        }
+
+        return bytes;
+    }
+
+    private static byte toByte(final Nibble highBits, final Nibble lowBits) {
+        return (byte) ((highBits.asByte() << 4) + lowBits.asByte());
+    }
+
+
     /**
      * <p>Changes the byte order from little-endian to big- endian or vice
      * versa.</p>
@@ -118,7 +142,7 @@ public class Bytes {
      * @return the <code>int</code> i with reversed byte order.
      */
     public static int reverseByteOrder(final int i) {
-        return ((i & 0xff000000) >> (8 * 3)) |
+        return ((i & 0xff000000) >>> (8 * 3)) |
                 ((i & 0x00ff0000) >> (8)) |
                 ((i & 0x0000ff00) << (8)) |
                 ((i & 0x000000ff) << (8 * 3));
