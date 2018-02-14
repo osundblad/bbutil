@@ -23,24 +23,38 @@ public class ByteBuilderTest {
     public void append_4bits_ok() {
         final ByteBuilder builder = ByteBuilder.empty().append(true, true);
         builder.append(false, true, false, true);
-        final byte result = builder.build();
 
-        assertThat(result, is((byte) 0b11010100));
+        assertThat(builder.build(), is((byte) 0b11010100));
     }
 
     @Test
     public void append_nibble_ok() {
         final ByteBuilder builder = ByteBuilder.empty().append(true, true);
         builder.append(Nibble.fromBits(false, true, false, true));
-        final byte result = builder.build();
 
-        assertThat(result, is((byte) 0b11010100));
+        assertThat(builder.build(), is((byte) 0b11010100));
     }
 
     @Test
     public void append_empty9bits_fail() {
         exception.expect(IllegalStateException.class);
         ByteBuilder.empty().append(true, false, true, false, true, false, true, false,  true);
+    }
+
+    @Test
+    public void append_2nibbles_ok() {
+        final ByteBuilder builder = ByteBuilder.empty()
+                .append(Nibble.from(0b1011))
+                .append(Nibble.from(0b0011));
+
+        assertThat(builder.build(), is((byte) 0b10110011));
+    }
+
+    @Test
+    public void build_not8bits_shouldAppendZeroes() {
+        final byte result = ByteBuilder.empty().append(Nibble.from(0b1011)).build();
+
+        assertThat(result, is((byte) 0b10110000));
     }
 
 }
