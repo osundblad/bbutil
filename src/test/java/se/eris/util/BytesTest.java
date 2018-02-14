@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.nio.ByteOrder;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("MagicNumber")
@@ -56,6 +58,14 @@ public class BytesTest {
         final int reverseByteOrder = Bytes.reverseByteOrder(anInt);
 
         assertEquals(reverseByteOrder, 0b00000000_00000000_00000000_11111111);
+    }
+
+    @Test
+    public void toBinaryString() {
+        assertThat(Bytes.toBinaryString((byte) 0), is("00000000"));
+        assertThat(Bytes.toBinaryString((byte) 1), is("00000001"));
+        assertThat(Bytes.toBinaryString((byte) 0x7f), is("01111111"));
+        assertThat(Bytes.toBinaryString((byte) 0xff), is("11111111"));
     }
 
 }

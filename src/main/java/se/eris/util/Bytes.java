@@ -241,4 +241,11 @@ public class Bytes {
         return Float.intBitsToFloat(toInt(ba));
     }
 
+    public static String toBinaryString(final byte value) {
+        final char[] chars = new char[8];
+        for (int i = 0; i < 8; i++) {
+            chars[i] = ((value >>> (7 - i)) & 0b1) == 0 ? '0' : '1';
+        }
+        return new String(chars);
+    }
 }

@@ -15,6 +15,10 @@ public class Nibble {
         return new Nibble(value);
     }
 
+    public static Nibble fromBits(final boolean b0, final boolean b1, final boolean b2, final boolean b3) {
+        return new Nibble((b0 ? 0b1000 : 0) | (b1 ? 0b100 : 0) | (b2 ? 0b10 : 0) | (b3 ? 0b1 : 0));
+    }
+
     public static Nibble fromHexChar(final char hexChar) {
         if ('0' <= hexChar && hexChar <= '9') {
             return from(hexChar - '0');
@@ -47,8 +51,16 @@ public class Nibble {
         return value;
     }
 
-    public byte asInt() {
+    public int asInt() {
         return value;
+    }
+
+    public boolean[] asBitArray() {
+        final boolean[] bits = new boolean[4];
+        for (int i = 0; i < 4; i++) {
+            bits[i] = ((1 << 3 - i) & value) != 0;
+        }
+        return bits;
     }
 
     @Override
@@ -68,5 +80,4 @@ public class Nibble {
     public String toString() {
         return "Nibble{value=" + value + '}';
     }
-
 }
