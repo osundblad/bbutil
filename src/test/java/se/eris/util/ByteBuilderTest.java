@@ -57,4 +57,29 @@ public class ByteBuilderTest {
         assertThat(result, is((byte) 0b10110000));
     }
 
+    @Test
+    public void set_0to7_shouldWork() {
+        final ByteBuilder empty = ByteBuilder.empty();
+        for (int i = 0; i < 8; i++) {
+            assertThat(empty.set(i, true).build(), is((byte) (1<<(7-i))));
+            assertThat(empty.set(i, false).build(), is((byte) 0));
+        }
+    }
+
+    @Test
+    public void set_negative_shouldFail() {
+        final ByteBuilder empty = ByteBuilder.empty();
+
+        exception.expect(IllegalArgumentException.class);
+        empty.set(-1, true);
+    }
+
+    @Test
+    public void set_above7_shouldFail() {
+        final ByteBuilder empty = ByteBuilder.empty();
+
+        exception.expect(IllegalArgumentException.class);
+        empty.set(8, true);
+    }
+
 }

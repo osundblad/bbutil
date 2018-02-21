@@ -2,9 +2,6 @@ package se.eris.util;
 
 import org.junit.Test;
 
-import java.nio.ByteOrder;
-
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 public class BitsTest {
@@ -25,4 +22,11 @@ public class BitsTest {
         final byte[] ba = new byte[]{0, 1, -1};
         assertEquals("00000000 00000001 11111111", Bits.toBitString(ba, " "));
     }
+
+    @Test
+    public void toBitString_byteArray() {
+        final byte[] ba = new byte[]{0, 1, -1};
+        assertEquals("000000000000000111111111", Bits.toBitString(ba));
+    }
+
 }

@@ -52,7 +52,7 @@ public final class Bits {
      * @return a string representation of the argument in base 2.
      */
     public static String toBitString(final byte[] ba) {
-        return toBitString(ba, null);
+        return toBitString(ba, "");
     }
 
 

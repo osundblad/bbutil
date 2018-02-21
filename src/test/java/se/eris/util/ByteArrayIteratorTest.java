@@ -29,12 +29,12 @@ public class ByteArrayIteratorTest {
     }
 
     @Test
-    public void next() {
+    public void nextRaw() {
         final byte[] bytes = {0, 1, 2, 3, 4, 5};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
         for (int i = 0; i < bytes.length; i++) {
-            assertEquals(i, iterator.next());
+            assertEquals(i, iterator.nextRaw());
         }
 
         assertFalse(iterator.hasNext());

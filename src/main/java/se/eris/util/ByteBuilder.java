@@ -32,6 +32,18 @@ public class ByteBuilder {
         return this;
     }
 
+    public ByteBuilder set(final int bit, final boolean value) {
+        if (bit < 0 || bit > 7) {
+            throw new IllegalArgumentException(String.format("bit (%d) must be between 0 and 7", bit));
+        }
+        if (value) {
+            this.value |= 1 << (7 - bit);
+        } else {
+            this.value &= 0xff ^ 1 << (7 - bit);
+        }
+        return this;
+    }
+
     public ByteBuilder append(final Nibble nibble) {
         return append(nibble.asBitArray());
     }

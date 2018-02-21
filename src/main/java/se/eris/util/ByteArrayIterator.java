@@ -1,8 +1,9 @@
 package se.eris.util;
 
 import java.util.Arrays;
+import java.util.Iterator;
 
-public class ByteArrayIterator {
+public class ByteArrayIterator implements Iterator<Byte> {
 
     private final byte[] bytes;
     private int index;
@@ -19,7 +20,11 @@ public class ByteArrayIterator {
         return index + n <= bytes.length;
     }
 
-    public byte next() {
+    public Byte next() {
+        return bytes[index++];
+    }
+
+    public byte nextRaw() {
         return bytes[index++];
     }
 
@@ -59,7 +64,7 @@ public class ByteArrayIterator {
     /**
      * @param n skip n bytes
      * @return true if the skip could be completed without passing the end of the byte array (ie. executing
-     * the same number of {@link #next()} would have been successful), false otherwise.
+     * the same number of {@link #next()} or {@link #nextRaw()} would have been successful), false otherwise.
      */
     public boolean skip(final int n) {
         index += n;

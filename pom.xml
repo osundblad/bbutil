@@ -71,6 +71,11 @@
                     </nullable>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.3.2</version>
+            </plugin>
         </plugins>
     </build>
 
