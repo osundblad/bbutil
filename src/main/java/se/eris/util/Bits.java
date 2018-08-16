@@ -3,6 +3,9 @@
  */
 package se.eris.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * This is a small utility for communication between different platforms
  * and/or languages. There are methods for converting to/from little/big
@@ -152,6 +155,21 @@ public final class Bits {
      */
     public static int setBit(final int source, final int bit, final boolean value) {
         return value ? source | (1 << bit) : source & ~(1 << bit);
+    }
+
+    public static Set<Integer> bitsToIntegerSet(final byte[] bytes) {
+        final Set<Integer> integers = new HashSet<>();
+        for (int byteNo = 0; byteNo < bytes.length; byteNo++) {
+            final byte aByte = bytes[byteNo];
+            if (aByte != 0) {
+                for (int bit = 0; bit < 8; bit++) {
+                    if ((aByte & (1 << bit)) != 0) {
+                        integers.add(byteNo * 8 + bit);
+                    }
+                }
+            }
+        }
+        return integers;
     }
 
 }
