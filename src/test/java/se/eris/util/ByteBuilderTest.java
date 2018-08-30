@@ -16,6 +16,7 @@ public class ByteBuilderTest {
     public void append_empty8bits_ok() {
         final byte result = ByteBuilder.empty().append(true, false, true, false, true, false, true, false).build();
 
+        //noinspection MagicNumber
         assertThat(result, is((byte) 0b10101010));
     }
 
@@ -24,6 +25,7 @@ public class ByteBuilderTest {
         final ByteBuilder builder = ByteBuilder.empty().append(true, true);
         builder.append(false, true, false, true);
 
+        //noinspection MagicNumber
         assertThat(builder.build(), is((byte) 0b11010100));
     }
 
@@ -32,6 +34,7 @@ public class ByteBuilderTest {
         final ByteBuilder builder = ByteBuilder.empty().append(true, true);
         builder.append(Nibble.fromBits(false, true, false, true));
 
+        //noinspection MagicNumber
         assertThat(builder.build(), is((byte) 0b11010100));
     }
 
@@ -47,6 +50,7 @@ public class ByteBuilderTest {
                 .append(Nibble.from(0b1011))
                 .append(Nibble.from(0b0011));
 
+        //noinspection MagicNumber
         assertThat(builder.build(), is((byte) 0b10110011));
     }
 
@@ -54,6 +58,7 @@ public class ByteBuilderTest {
     public void build_not8bits_shouldAppendZeroes() {
         final byte result = ByteBuilder.empty().append(Nibble.from(0b1011)).build();
 
+        //noinspection MagicNumber
         assertThat(result, is((byte) 0b10110000));
     }
 
@@ -61,8 +66,8 @@ public class ByteBuilderTest {
     public void set_0to7_shouldWork() {
         final ByteBuilder empty = ByteBuilder.empty();
         for (int i = 0; i < 8; i++) {
-            assertThat(empty.set(i, true).build(), is((byte) (1<<(7-i))));
-            assertThat(empty.set(i, false).build(), is((byte) 0));
+            assertThat(empty.setBit(i, true).build(), is((byte) (1<<(i))));
+            assertThat(empty.setBit(i, false).build(), is((byte) 0));
         }
     }
 
@@ -71,7 +76,7 @@ public class ByteBuilderTest {
         final ByteBuilder empty = ByteBuilder.empty();
 
         exception.expect(IllegalArgumentException.class);
-        empty.set(-1, true);
+        empty.setBit(-1, true);
     }
 
     @Test
@@ -79,7 +84,7 @@ public class ByteBuilderTest {
         final ByteBuilder empty = ByteBuilder.empty();
 
         exception.expect(IllegalArgumentException.class);
-        empty.set(8, true);
+        empty.setBit(8, true);
     }
 
 }

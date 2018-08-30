@@ -11,23 +11,16 @@ public class ByteArrayBuilder {
     private byte[] bytes;
     private int written;
 
-    public ByteArrayBuilder() {
-        bytes = new byte[DEFAULT_SIZE];
+    public static ByteArrayBuilder fromBytes(final byte... bytes) {
+        return new ByteArrayBuilder(DEFAULT_SIZE, bytes);
     }
 
-    public ByteArrayBuilder(final int size) {
-        bytes = new byte[size];
+    public static ByteArrayBuilder withCapacity(final int capacity, final byte... bytes) {
+        return new ByteArrayBuilder(capacity, bytes);
     }
 
-    public ByteArrayBuilder(final byte[] bytes) {
-        this.bytes = Arrays.copyOf(bytes, bytes.length);
-        written = bytes.length;
-    }
-
-    public ByteArrayBuilder(final byte[] bytes, final int extraCapacity) {
-        validateExtraCapacity("extraCapacity cannot be negative (%d)", extraCapacity);
-        validateFinalSize(bytes.length, extraCapacity);
-        this.bytes = Arrays.copyOf(bytes, bytes.length + extraCapacity);
+    private ByteArrayBuilder(final int capacity, final byte... bytes) {
+        this.bytes = Arrays.copyOf(bytes, Math.max(bytes.length, capacity));
         written = bytes.length;
     }
 
@@ -37,27 +30,20 @@ public class ByteArrayBuilder {
         return this;
     }
 
-    public ByteArrayBuilder append(final short s) {
-        appendShort(s);
-        return this;
-    }
-
-    public ByteArrayBuilder append(final int i) {
-        appendInt(i);
-        return this;
-    }
-
     /**
      * Appends the float as raw int bits (4 bytes).
      * @param f the float to append
      * @see Float#floatToRawIntBits(float)
      */
-    public ByteArrayBuilder append(final float f) {
-        append(Float.floatToRawIntBits(f));
+    public ByteArrayBuilder appendFloat(final float f) {
+        appendInt(Float.floatToRawIntBits(f));
         return this;
     }
 
-    public ByteArrayBuilder append(final long l) {
+    /**
+     * @param l the long to append (8 bytes)
+     */
+    public ByteArrayBuilder appendLong(final long l) {
         checkIncreaseCapacity(8);
         bytes[written++] = (byte) (l >>> 56);
         bytes[written++] = (byte) (l >>> 48);
@@ -70,7 +56,7 @@ public class ByteArrayBuilder {
         return this;
     }
 
-    public ByteArrayBuilder append(final byte[] bytes) {
+    public ByteArrayBuilder append(final byte... bytes) {
         checkIncreaseCapacity(bytes.length);
         System.arraycopy(bytes, 0, this.bytes, written, bytes.length);
         written += bytes.length;
@@ -80,6 +66,14 @@ public class ByteArrayBuilder {
     public ByteArrayBuilder appendByte(final int i) {
         checkIncreaseCapacity(1);
         bytes[written++] = (byte) i;
+        return this;
+    }
+
+    public ByteArrayBuilder appendBytes(final int... bytes) {
+        checkIncreaseCapacity(bytes.length);
+        for (final int aByte : bytes) {
+            this.bytes[written++] = (byte) aByte;
+        }
         return this;
     }
 
@@ -96,9 +90,7 @@ public class ByteArrayBuilder {
     }
 
     /**
-     * Just for completeness same as {@link #append(int)}.
-     * @param i the integer to append
-     * @see #append(int)
+     * @param i the integer to append (4 bytes)
      */
     public ByteArrayBuilder appendInt(final int i) {
         appendInt(i, ByteOrderInt.BIG_ENDIAN);
@@ -112,23 +104,9 @@ public class ByteArrayBuilder {
         return this;
     }
 
-    /**
-     * Just for completeness same as {@link #append(long)}.
-     * @param l the long to append
-     * @see #append(long)
-     */
-    public ByteArrayBuilder appendLong(final long l) {
-        append(l);
-        return this;
-    }
-
     public ByteArrayBuilder appendHex(final String hexString) {
         append(Bytes.hexToByteArray(hexString));
         return this;
-    }
-
-    public byte[] asBytes() {
-        return Arrays.copyOfRange(bytes, 0, written);
     }
 
     public int size() {
@@ -184,6 +162,26 @@ public class ByteArrayBuilder {
         if (currentSize + extraCapacity < 0) {
             throw new IllegalArgumentException("Cannot allocate array with size greater than Integer.MAX_VALUE");
         }
+    }
+
+    public ByteArrayBuilder setBytes(final int index, final byte... bytes) {
+        checkIncreaseCapacity(index + bytes.length - this.bytes.length);
+        System.arraycopy(bytes, 0, this.bytes, index, bytes.length);
+        written = Math.max(written, index + bytes.length);
+        return this;
+    }
+
+    public ByteBuilder<ByteArrayBuilder> byteBuilder(final int index) {
+        return ByteBuilder.from(bytes[index], value -> {bytes[index] = value; return this; });
+    }
+
+    public byte[] asBytes() {
+        return Arrays.copyOfRange(bytes, 0, written);
+    }
+
+
+    public ByteArrayBuilder append(final int b) {
+        return appendByte(b);
     }
 
 }

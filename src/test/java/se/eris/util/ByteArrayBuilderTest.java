@@ -1,15 +1,14 @@
 package se.eris.util;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ByteArrayBuilderTest {
+class ByteArrayBuilderTest {
 
     private static final byte BYTE_1 = 17;
     private static final byte BYTE_2 = -127;
@@ -18,61 +17,49 @@ public class ByteArrayBuilderTest {
     private static final int INT_2 = -127;
     private static final int INT_3 = 0x01_02_03_04;
 
-
     private static final short SHORT_1 = 0x01_00;
     private static final short SHORT_2 = (short) 0xff_00;
     private static final short SHORT_3 = (short) 0xf0_01;
     private static final long LONG_1 = 0x01_02_03_04_05_06_07_08L;
 
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
-
     @Test
-    public void new_defaultSize() {
-        assertEquals(16, new ByteArrayBuilder().capacity());
+    void new_defaultSize() {
+        assertEquals(16, ByteArrayBuilder.fromBytes().capacity());
     }
 
     @Test
-    public void new_defaultGrowFunction() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(4);
+    void new_defaultGrowFunction() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(4);
         assertEquals(4, builder.capacity());
         builder.appendInt(4);
-        builder.appendByte(1);
+        builder.appendBytes(1);
         assertEquals(6, builder.capacity());
-        builder.appendByte(1);
-        builder.appendByte(1);
+        builder.appendBytes(1);
+        builder.appendBytes(1);
         assertEquals(9, builder.capacity());
     }
 
     @Test
-    public void new_byteArray_extraCapacity_shouldHaveInitialCapacity() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(new byte[]{1, 2, 3, 4}, 4);
+    void new_byteArray_extraCapacity_shouldHaveInitialCapacity() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(2, new byte[]{1, 2, 3, 4});
 
-        assertEquals(8, builder.grow(0));
+        assertEquals(4, builder.capacity());
 
         builder.append(new byte[]{5, 6});
         builder.append(new byte[]{7, 8});
 
-        assertEquals(8, builder.grow(0));
+        assertTrue(builder.capacity() >= 8);
     }
 
     @Test
-    public void new_byteArray_extraCapacity_shouldValidateMaxArraySize() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Cannot allocate array with size greater than Integer.MAX_VALUE");
-        new ByteArrayBuilder(new byte[]{1, 2, 3, 4}, Integer.MAX_VALUE);
+    void withCapacity_shouldIgnoreNegativeCapacity() {
+        final ByteArrayBuilder byteArrayBuilder = ByteArrayBuilder.withCapacity(-1, new byte[]{1, 2, 3, 4});
+        assertEquals(4, byteArrayBuilder.capacity());
     }
 
     @Test
-    public void new_byteArray_extraCapacity_shouldValidateNegativeExtra() {
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("extraCapacity cannot be negative (-1)");
-        new ByteArrayBuilder(new byte[]{1, 2, 3, 4}, -1);
-    }
-
-    @Test
-    public void append_byte_shouldAutoGrow() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(1);
+    void append_byte_shouldAutoGrow() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(1);
 
         builder.append(BYTE_1);
         builder.append(BYTE_2);
@@ -81,28 +68,29 @@ public class ByteArrayBuilderTest {
     }
 
     @Test
-    public void append_short_shouldAutoGrow() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(1);
+    void append_short_shouldAutoGrow() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(1);
 
-        builder.append(SHORT_1);
-        builder.append(SHORT_2);
-        builder.append(SHORT_3);
+        builder.appendShort(SHORT_1);
+        builder.appendShort(SHORT_2);
+        builder.appendShort(SHORT_3);
 
+        //noinspection MagicNumber
         ByteArrayTestUtil.assertArrays(new byte[]{0x01, 0x00, (byte) 0xff, 0x00, (byte) 0xf0, 0x01}, builder.asBytes());
     }
 
     @Test
-    public void append_int_shouldAutoGrow() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(3);
+    void appendInt_shouldAutoGrow() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(3);
 
-        builder.append(INT_3);
+        builder.appendInt(INT_3);
 
         ByteArrayTestUtil.assertArrays(new byte[]{1, 2, 3, 4}, builder.asBytes());
     }
 
     @Test
-    public void append_byteArray_shouldAutoGrow() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(new byte[]{1, 2, 3, 4});
+    void append_byteArray_shouldAutoGrow() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.fromBytes(new byte[]{1, 2, 3, 4});
 
         builder.append(new byte[]{5, 6});
 
@@ -110,18 +98,18 @@ public class ByteArrayBuilderTest {
     }
 
     @Test
-    public void appendByte_shouldAutoGrow() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(1);
+    void appendByte_shouldAutoGrow() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(1);
 
-        builder.appendByte(INT_1);
-        builder.appendByte(INT_2);
+        builder.append(BYTE_1);
+        builder.append(BYTE_2);
 
-        assertTrue(Arrays.equals(new byte[]{17, -127}, builder.asBytes()));
+        assertTrue(Arrays.equals(new byte[]{BYTE_1, BYTE_2}, builder.asBytes()));
     }
 
     @Test
-    public void appendShort_shouldAutoGrow() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(1);
+    void appendShort_shouldAutoGrow() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(1);
 
         builder.appendShort(SHORT_3);
 
@@ -129,8 +117,8 @@ public class ByteArrayBuilderTest {
     }
 
     @Test
-    public void appendLong() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(7);
+    void appendLong() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(7);
 
         builder.appendLong(LONG_1);
 
@@ -138,16 +126,16 @@ public class ByteArrayBuilderTest {
     }
 
     @Test
-    public void appendLong_withSignBitSet() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(7);
+    void appendLong_withSignBitSet() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(7);
 
         builder.appendLong(0xff_00_00_00_00_00_ff_00L);
         ByteArrayTestUtil.assertArrays(new byte[]{(byte) 0xff, 0x00, 0x00, 0x00, 0x00, 0x00, (byte) 0xff, 0x00}, builder.asBytes());
     }
 
     @Test
-    public void grow_oneByteAtTheTime() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(0);
+    void grow_oneByteAtTheTime() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(0);
 
         for (int i = 0; i < 10; i++) {
             builder.grow(1);
@@ -158,16 +146,15 @@ public class ByteArrayBuilderTest {
     }
 
     @Test
-    public void grow_overIntegerMaxValue() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder();
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Cannot allocate array with size greater than Integer.MAX_VALUE");
-        builder.grow(Integer.MAX_VALUE - 10);
+    void grow_overIntegerMaxValue() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.fromBytes();
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.grow(Integer.MAX_VALUE - 10));
+        assertEquals("Cannot allocate array with size greater than Integer.MAX_VALUE", exception.getMessage());
     }
 
     @Test
-    public void grow_before() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(5);
+    void grow_before() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(5);
 
         builder.grow(5);
         assertEquals(10, builder.grow(0));
@@ -179,32 +166,52 @@ public class ByteArrayBuilderTest {
     }
 
     @Test
-    public void grow_negativeValue() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(1);
+    void grow_negativeValue() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(1);
 
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("addCapacity cannot be negative (-1)");
-        builder.grow(-1);
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.grow(-1));
+        assertEquals("addCapacity cannot be negative (-1)", exception.getMessage());
     }
 
     @Test
-    public void grow_pastIntegerMaxValue_shouldFail() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder(1);
+    void grow_pastIntegerMaxValue_shouldFail() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(1);
 
-        exception.expect(IllegalArgumentException.class);
-        exception.expectMessage("Cannot allocate array with size greater than Integer.MAX_VALUE");
-        builder.grow(Integer.MAX_VALUE);
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.grow(Integer.MAX_VALUE));
+
+        assertEquals("Cannot allocate array with size greater than Integer.MAX_VALUE", exception.getMessage());
     }
 
     @Test
-    public void appendHex() {
-        final ByteArrayBuilder builder = new ByteArrayBuilder();
+    void appendHex() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.fromBytes();
         builder.appendHex("1234567890ABCDEF");
 
         final byte[] bytes = builder.asBytes();
 
         final byte[] expected = {18, 52, 86, 120, -112, -85, -51, -17};
-        assertTrue(String.format("Got: %s but expected %s", Arrays.toString(bytes), Arrays.toString(expected)), Arrays.equals(bytes, expected));
+        assertTrue(Arrays.equals(bytes, expected), String.format("Got: %s but expected %s", Arrays.toString(bytes), Arrays.toString(expected)));
     }
+
+    @Test
+    void byteBuilder() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.fromBytes(BYTE_1, BYTE_2);
+
+        builder.byteBuilder(1).clear().build();
+
+        assertEquals(0, builder.asBytes()[1]);
+    }
+
+    @Test
+    void setBytes() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.fromBytes();
+        builder.setBytes(2, (byte) 1, (byte) 2);
+
+        final byte[] bytes = builder.asBytes();
+
+        final byte[] expected = {0, 0, 1, 2};
+        assertTrue(Arrays.equals(bytes, expected), String.format("Got: %s but expected %s", Arrays.toString(bytes), Arrays.toString(expected)));
+    }
+
 
 }
