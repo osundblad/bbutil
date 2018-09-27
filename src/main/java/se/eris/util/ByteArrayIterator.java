@@ -33,7 +33,7 @@ public class ByteArrayIterator implements Iterator<Byte> {
     }
 
     public short nextShort(final ByteOrderShort byteFormat) {
-        final short s = byteFormat.asShort(bytes, index);
+        final short s = byteFormat.asShort(index, bytes);
         index += 2;
         return s;
     }
@@ -43,7 +43,7 @@ public class ByteArrayIterator implements Iterator<Byte> {
     }
 
     public int nextInt(final ByteOrderInt byteFormat) {
-        final int i = (byteFormat.asInt(bytes, index));
+        final int i = (byteFormat.asInt(index, bytes));
         index += 4;
         return i;
     }

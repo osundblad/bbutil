@@ -1,11 +1,9 @@
 package se.eris.util;
 
-import java.util.Objects;
-
 public class Nibble {
 
-    public static final int MAX_VALUE = 0x0f;
-    public static final int MIN_VALUE = 0;
+    public static final byte MAX_VALUE = 0x0f;
+    public static final byte MIN_VALUE = 0x00;
 
     private static final String HEX_CHARACTERS = "0123456789ABCDEF";
 
@@ -17,6 +15,13 @@ public class Nibble {
 
     public static Nibble fromBits(final boolean b0, final boolean b1, final boolean b2, final boolean b3) {
         return new Nibble((b0 ? 0b1000 : 0) | (b1 ? 0b100 : 0) | (b2 ? 0b10 : 0) | (b3 ? 0b1 : 0));
+    }
+
+    public static Nibble fromHex(final String hex) {
+        if (hex.length() != 1) {
+            throw new IllegalArgumentException("A Nibbles is one character (0-9a-f");
+        }
+        return fromHexChar(hex.charAt(0));
     }
 
     public static Nibble fromHexChar(final char hexChar) {
@@ -55,6 +60,33 @@ public class Nibble {
         return value;
     }
 
+    public static Nibble[] toNibbles(final byte b) {
+        return new Nibble[]{
+                Nibble.from((b & 0xf0) >>> 4),
+                Nibble.from( b & 0x0f)};
+    }
+
+    public static Nibble[] toNibbles(final short s) {
+        return new Nibble[]{
+                Nibble.from((s & 0xf000) >>> 12),
+                Nibble.from((s & 0x0f00) >>> 8),
+                Nibble.from((s & 0x00f0) >>> 4),
+                Nibble.from( s & 0x000f)};
+    }
+
+    public static Nibble[] toNibbles(final int i) {
+        return new Nibble[]{
+                Nibble.from((i & 0xf0000000) >>> 28),
+                Nibble.from((i & 0x0f000000) >>> 24),
+                Nibble.from((i & 0x00f00000) >>> 20),
+                Nibble.from((i & 0x00f00000) >>> 16),
+                Nibble.from((i & 0x0000f000) >>> 12),
+                Nibble.from((i & 0x00000f00) >>> 8),
+                Nibble.from((i & 0x000000f0) >>> 4),
+                Nibble.from( i & 0x00000000f)};
+    }
+
+
     public boolean[] asBitArray() {
         final boolean[] bits = new boolean[4];
         for (int i = 0; i < 4; i++) {
@@ -73,11 +105,11 @@ public class Nibble {
 
     @Override
     public int hashCode() {
-        return Objects.hash(value);
+        return value;
     }
 
     @Override
     public String toString() {
-        return "Nibble{value=" + value + '}';
+        return "Nibble{0x" + asHexChar() + '}';
     }
 }

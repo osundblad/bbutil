@@ -15,11 +15,11 @@ public class ByteOrderInt {
         this.shifts = Arrays.copyOf(shifts, shifts.length);
     }
 
-    public int asInt(final byte[] bytes) {
-        return asInt(bytes, 0);
+    public int asInt(final byte... bytes) {
+        return asInt(0, bytes);
     }
 
-    public int asInt(final byte[] bytes, final int offset) {
+    public int asInt(final int offset, final byte... bytes) {
         int value = 0;
         for (int i = 0; i < shifts.length; i++) {
             value |= bytes[offset + i] << shifts[i];
@@ -40,6 +40,11 @@ public class ByteOrderInt {
                 ((i & 0x00ff0000) >>> (8 * 2)) |
                 ((i & 0x0000ff00) << (8 * 2)) |
                 ((i & 0x000000ff) << (8 * 3));
+    }
+
+    @Override
+    public String toString() {
+        return "ByteOrderInt{" + name + '}';
     }
 
 }

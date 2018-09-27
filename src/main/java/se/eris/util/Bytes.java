@@ -217,9 +217,9 @@ public class Bytes {
      */
     public static int toInt(final byte[] ba, final int offset, final ByteOrder format) {
         if (ByteOrder.LITTLE_ENDIAN.equals(format)) {
-            return ByteOrderInt.LITTLE_ENDIAN.asInt(ba, offset);
+            return ByteOrderInt.LITTLE_ENDIAN.asInt(offset, ba);
         } else if (ByteOrder.BIG_ENDIAN.equals(format)) {
-            return ByteOrderInt.BIG_ENDIAN.asInt(ba, offset);
+            return ByteOrderInt.BIG_ENDIAN.asInt(offset, ba);
         }
         throw new IllegalArgumentException("Unknown byte order: " + format);
     }

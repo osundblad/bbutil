@@ -15,7 +15,7 @@ public class ByteOrderShort {
         this.shifts = Arrays.copyOf(shifts, shifts.length);
     }
 
-    public short asShort(final byte[] bytes, final int offset) {
+    public short asShort(final int offset, final byte... bytes) {
         int value = 0;
         for (int i = 0; i < shifts.length; i++) {
             value |= bytes[offset + i] << shifts[i];
@@ -36,4 +36,8 @@ public class ByteOrderShort {
                         (s & 0x00ff) << 8);
     }
 
+    @Override
+    public String toString() {
+        return "ByteOrderShort{" + name + '}';
+    }
 }
