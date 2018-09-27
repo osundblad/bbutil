@@ -1,8 +1,12 @@
-package se.eris.util;
+package se.eris.util.lib;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import se.eris.util.ByteArrayIterator;
+import se.eris.util.ByteOrderInt;
+import se.eris.util.ByteOrderShort;
+import se.eris.util.TestUtil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -87,9 +91,9 @@ public class ByteArrayIteratorTest {
         final byte[] bytes = {0, 1, 2, 3, 4, 5};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
-        ByteArrayTestUtil.assertArrays(new byte[] {0, 1, 2}, iterator.nextByteArray(3));
-        ByteArrayTestUtil.assertArrays(new byte[] {3}, iterator.nextByteArray(1));
-        ByteArrayTestUtil.assertArrays(new byte[] {4, 5}, iterator.nextByteArray(2));
+        TestUtil.assertEqual(new byte[] {0, 1, 2}, iterator.nextByteArray(3));
+        TestUtil.assertEqual(new byte[] {3}, iterator.nextByteArray(1));
+        TestUtil.assertEqual(new byte[] {4, 5}, iterator.nextByteArray(2));
     }
 
     @Test

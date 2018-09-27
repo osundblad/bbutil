@@ -1,6 +1,7 @@
-package se.eris.util;
+package se.eris.util.lib;
 
 import org.junit.Test;
+import se.eris.util.Nibble;
 
 import java.util.Arrays;
 

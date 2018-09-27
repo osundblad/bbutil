@@ -1,8 +1,10 @@
-package se.eris.util;
+package se.eris.util.lib;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import se.eris.util.ByteBuilder;
+import se.eris.util.Nibble;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

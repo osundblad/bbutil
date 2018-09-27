@@ -1,10 +1,8 @@
-package se.eris.util;
+package se.eris.util.lib;
 
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import se.eris.util.ByteArrayBuilder;
+import se.eris.util.TestUtil;
 
 class SampleFT {
 
@@ -17,7 +15,7 @@ class SampleFT {
         final byte[] bytes = builder.asBytes();
 
         final byte[] expected = {18, 52, 86, 120, -112, -85, -51, -17, 0,0,0,17, 16};
-        assertTrue(Arrays.equals(bytes, expected), String.format("Got: %s but expected %s", Arrays.toString(bytes), Arrays.toString(expected)));
+        TestUtil.assertEqual(expected, bytes);
     }
 
     @Test
@@ -31,7 +29,7 @@ class SampleFT {
 
         final byte[] expected = {(byte) 0xf0, 0x0f, 0x04, 0x00, 0x05};
         final byte[] bytes = builder.asBytes();
-        assertTrue(Arrays.equals(bytes, expected), String.format("Got: %s but expected %s", Arrays.toString(bytes), Arrays.toString(expected)));
+        TestUtil.assertEqual(expected, bytes);
     }
 
 }

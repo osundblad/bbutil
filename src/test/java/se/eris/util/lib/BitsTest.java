@@ -1,7 +1,9 @@
-package se.eris.util;
+package se.eris.util.lib;
 
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import se.eris.util.Bits;
 
 import java.util.Set;
 
@@ -16,7 +18,7 @@ class BitsTest {
 
     @Test
     void toBitString_ok() {
-        assertEquals("00000000", Bits.toBitString(BYTE_0));
+        Assertions.assertEquals("00000000", Bits.toBitString(BYTE_0));
         assertEquals("00000001", Bits.toBitString(BYTE_1));
         assertEquals("11111111", Bits.toBitString(BYTE_2));
     }

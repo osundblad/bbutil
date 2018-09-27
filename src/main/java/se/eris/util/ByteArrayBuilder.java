@@ -5,14 +5,23 @@ import java.util.function.IntUnaryOperator;
 
 public class ByteArrayBuilder {
 
-    private static final int DEFAULT_SIZE = 16;
+    public static final int MAX_ARRAY_LENGTH = Integer.MAX_VALUE - 2;
+
+    public static final int DEFAULT_CAPACITY = 16;
+    /**
+     * Grow half current size.
+     */
     private static final IntUnaryOperator DEFAULT_GROW_FUNCTION = (len) -> len >> 1;
 
     private byte[] bytes;
     private int written;
 
+    public static ByteArrayBuilder empty() {
+        return withCapacity(0);
+    }
+
     public static ByteArrayBuilder fromBytes(final byte... bytes) {
-        return new ByteArrayBuilder(DEFAULT_SIZE, bytes);
+        return withCapacity(DEFAULT_CAPACITY, bytes);
     }
 
     public static ByteArrayBuilder withCapacity(final int capacity, final byte... bytes) {
@@ -121,16 +130,16 @@ public class ByteArrayBuilder {
      * Optimized grow, use only when you know exactly how much the array should grow. Normally the
      * default grow algorithm should suffice.
      *
-     * @param addCapacity the exact capacity to add
+     * @param noOfBytes the exact capacity to add
      * @return new capacity
-     * @throws IllegalArgumentException if addCapacity is negative or the resulting array size
+     * @throws IllegalArgumentException if noOfBytes is negative or the resulting array size
      * would pass Integer.MAX_VALUE.
      */
-    public int grow(final int addCapacity) {
-        validateExtraCapacity("addCapacity cannot be negative (%d)", addCapacity);
-        validateFinalSize(bytes.length, addCapacity);
+    public int grow(final int noOfBytes) {
+        validateNonNegative("noOfBytes cannot be negative (%d)", noOfBytes);
+        validateFinalSize(bytes.length, noOfBytes);
 
-        bytes = Arrays.copyOf(bytes, bytes.length + addCapacity);
+        bytes = Arrays.copyOf(bytes, bytes.length + noOfBytes);
         return bytes.length;
     }
 
@@ -141,25 +150,28 @@ public class ByteArrayBuilder {
     }
 
     private void internalGrow(final int minAdd) {
-        final int extraCapacity = Math.max(growFunction().applyAsInt(bytes.length), minAdd);
+        final int extraCapacity = calculateExtraCapacity(minAdd);
         validateFinalSize(bytes.length, extraCapacity);
 
         bytes = Arrays.copyOf(bytes, bytes.length + extraCapacity);
     }
 
-    private IntUnaryOperator growFunction() {
-        return DEFAULT_GROW_FUNCTION;
+    private int calculateExtraCapacity(final int minAdd) {
+        final int growth = DEFAULT_GROW_FUNCTION.applyAsInt(bytes.length);
+        if (bytes.length + growth > MAX_ARRAY_LENGTH || bytes.length + growth < 0) {
+            return MAX_ARRAY_LENGTH - bytes.length;
+        }
+        return Math.max(growth, minAdd);
     }
 
-
-    private void validateExtraCapacity(final String s, final int extraCapacity) {
-        if (extraCapacity < 0) {
-            throw new IllegalArgumentException(String.format(s, extraCapacity));
+    private static void validateNonNegative(final String s, final int value) {
+        if (value < 0) {
+            throw new IllegalArgumentException(String.format(s, value));
         }
     }
 
     private void validateFinalSize(final int currentSize, final int extraCapacity) {
-        if (currentSize + extraCapacity < 0) {
+        if (currentSize > 0 && currentSize + extraCapacity <= 0) {
             throw new IllegalArgumentException("Cannot allocate array with size greater than Integer.MAX_VALUE");
         }
     }

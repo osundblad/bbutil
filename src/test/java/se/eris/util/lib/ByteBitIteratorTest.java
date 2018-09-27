@@ -1,6 +1,7 @@
-package se.eris.util;
+package se.eris.util.lib;
 
 import org.junit.Test;
+import se.eris.util.ByteBitIterator;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertFalse;

@@ -1,6 +1,8 @@
-package se.eris.util;
+package se.eris.util.lib;
 
 import org.junit.Test;
+import se.eris.util.Bytes;
+import se.eris.util.TestUtil;
 
 import java.nio.ByteOrder;
 
@@ -38,10 +40,10 @@ public class BytesTest {
 
     @Test
     public void toByteArray() {
-        ByteArrayTestUtil.assertArrays(new byte[]{0,0,0,17}, Bytes.toByteArray(17, ByteOrder.BIG_ENDIAN));
-        ByteArrayTestUtil.assertArrays(new byte[]{-1,-1,-1, -17}, Bytes.toByteArray(-17, ByteOrder.BIG_ENDIAN));
-        ByteArrayTestUtil.assertArrays(new byte[]{0,0,18,103}, Bytes.toByteArray(4711, ByteOrder.BIG_ENDIAN));
-        ByteArrayTestUtil.assertArrays(new byte[]{-1,-1,-19,-103}, Bytes.toByteArray(-4711, ByteOrder.BIG_ENDIAN));
+        TestUtil.assertEqual(new byte[]{0,0,0,17}, Bytes.toByteArray(17, ByteOrder.BIG_ENDIAN));
+        TestUtil.assertEqual(new byte[]{-1,-1,-1, -17}, Bytes.toByteArray(-17, ByteOrder.BIG_ENDIAN));
+        TestUtil.assertEqual(new byte[]{0,0,18,103}, Bytes.toByteArray(4711, ByteOrder.BIG_ENDIAN));
+        TestUtil.assertEqual(new byte[]{-1,-1,-19,-103}, Bytes.toByteArray(-4711, ByteOrder.BIG_ENDIAN));
     }
 
     @Test

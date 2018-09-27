@@ -1,10 +1,11 @@
-package se.eris.util;
+package se.eris.util.lib;
 
 import org.junit.Test;
+import se.eris.util.ByteArrayFormatter;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class ByteArrayFormatterTest {
 
