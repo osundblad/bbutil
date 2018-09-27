@@ -171,8 +171,9 @@ public class ByteArrayBuilder {
     }
 
     private void validateFinalSize(final int currentSize, final int extraCapacity) {
-        if (currentSize > 0 && currentSize + extraCapacity <= 0) {
-            throw new IllegalArgumentException("Cannot allocate array with size greater than Integer.MAX_VALUE");
+        final int newSize = currentSize + extraCapacity;
+        if (newSize <= 0 || newSize > MAX_ARRAY_LENGTH) {
+            throw new IllegalArgumentException("Cannot allocate array with size greater than " + MAX_ARRAY_LENGTH + " (current size " + currentSize + " requested extra capacity " + extraCapacity + ")");
         }
     }
 

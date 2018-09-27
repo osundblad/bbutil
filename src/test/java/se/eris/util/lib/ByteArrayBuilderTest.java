@@ -156,7 +156,7 @@ class ByteArrayBuilderTest {
         final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(1);
         final Executable test = () -> builder.grow(Integer.MAX_VALUE);
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, test);
-        assertEquals("Cannot allocate array with size greater than Integer.MAX_VALUE", exception.getMessage());
+        assertEquals("Cannot allocate array with size greater than 2147483645 (current size 1 requested extra capacity 2147483647)", exception.getMessage());
     }
 
     @Test
@@ -193,7 +193,7 @@ class ByteArrayBuilderTest {
         final Executable executable = () -> builder.grow(ByteArrayBuilder.MAX_ARRAY_LENGTH);
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, executable);
 
-        assertEquals("Cannot allocate array with size greater than Integer.MAX_VALUE", exception.getMessage());
+        assertEquals("Cannot allocate array with size greater than 2147483645 (current size 1 requested extra capacity 2147483645)", exception.getMessage());
     }
 
     @Test
