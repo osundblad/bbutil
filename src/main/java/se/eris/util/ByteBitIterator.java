@@ -4,19 +4,37 @@ import java.util.Iterator;
 
 public class ByteBitIterator implements Iterator<Boolean> {
 
-    private static final int FIRST_BIT_POS = 7;
+    private static final int HIGHEST_BIT_POS = 7;
 
+    private final boolean fromLeastSignificantBit;
     private final byte value;
     private int pos;
 
-    public ByteBitIterator(final byte value) {
+    public static ByteBitIterator from(final byte value, final boolean fromLeastSignificantBit) {
+        return new ByteBitIterator(value, fromLeastSignificantBit);
+    }
+
+    public static ByteBitIterator from(final byte value) {
+        return new ByteBitIterator(value, true);
+    }
+
+    private ByteBitIterator(final byte value, final boolean fromLeastSignificantBit) {
         this.value = value;
-        pos = FIRST_BIT_POS;
+        this.fromLeastSignificantBit = fromLeastSignificantBit;
+        pos = fromLeastSignificantBit ? 0 : HIGHEST_BIT_POS;
     }
 
     @Override
     public boolean hasNext() {
-        return pos >= 0;
+        return pos != (fromLeastSignificantBit ? HIGHEST_BIT_POS + 1 : -1);
+    }
+
+    private boolean hasNext(final int numberOfBits) {
+        if (fromLeastSignificantBit) {
+            return pos + numberOfBits <= HIGHEST_BIT_POS + 1;
+        } else {
+            return pos - numberOfBits >= -1;
+        }
     }
 
     @Override
@@ -25,7 +43,31 @@ public class ByteBitIterator implements Iterator<Boolean> {
     }
 
     public boolean nextRaw() {
-        return (value & (1 << pos--)) != 0;
+        if (!hasNext()) {
+            throw new IndexOutOfBoundsException("No more bits");
+        }
+        final boolean b = (value & (1 << pos)) != 0;
+        step();
+        return b;
+    }
+
+    public int nextBits(final int numberOfBits) {
+        if (!hasNext(numberOfBits)) {
+            throw new IndexOutOfBoundsException("No more bits");
+        }
+        int result = 0;
+        for (int i = 0; i < numberOfBits; i++) {
+            result += nextRaw() ? 1 << i : 0;
+        }
+        return result;
+    }
+
+    private void step() {
+        if (fromLeastSignificantBit) {
+            pos++;
+        } else {
+            pos--;
+        }
     }
 
 }
