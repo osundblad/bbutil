@@ -4,10 +4,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import se.eris.util.ByteArrayBuilder;
-import se.eris.util.TestUtil;
 
-import java.util.Arrays;
-
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,7 +67,7 @@ class ByteArrayBuilderTest {
         builder.append(BYTE_11);
         builder.append(BYTE_81);
 
-        assertTrue(Arrays.equals(new byte[]{BYTE_11, BYTE_81}, builder.asBytes()));
+        assertArrayEquals(new byte[]{BYTE_11, BYTE_81}, builder.asBytes());
     }
 
     @Test
@@ -81,7 +79,7 @@ class ByteArrayBuilderTest {
         builder.appendShort(SHORT_F001);
 
         //noinspection MagicNumber
-        TestUtil.assertEqual(new byte[]{0x01, 0x00, (byte) 0xff, 0x00, (byte) 0xf0, 0x01}, builder.asBytes());
+        assertArrayEquals(new byte[]{0x01, 0x00, (byte) 0xff, 0x00, (byte) 0xf0, 0x01}, builder.asBytes());
     }
 
     @Test
@@ -90,7 +88,7 @@ class ByteArrayBuilderTest {
 
         builder.appendInt(INT_01020304);
 
-        TestUtil.assertEqual(new byte[]{1, 2, 3, 4}, builder.asBytes());
+        assertArrayEquals(new byte[]{1, 2, 3, 4}, builder.asBytes());
     }
 
     @Test
@@ -99,7 +97,7 @@ class ByteArrayBuilderTest {
 
         builder.append(new byte[]{5, 6});
 
-        TestUtil.assertEqual(new byte[]{1, 2, 3, 4, 5, 6}, builder.asBytes());
+        assertArrayEquals(new byte[]{1, 2, 3, 4, 5, 6}, builder.asBytes());
     }
 
     @Test
@@ -109,7 +107,7 @@ class ByteArrayBuilderTest {
         builder.append(BYTE_11);
         builder.append(BYTE_81);
 
-        assertTrue(Arrays.equals(new byte[]{BYTE_11, BYTE_81}, builder.asBytes()));
+        assertArrayEquals(new byte[]{BYTE_11, BYTE_81}, builder.asBytes());
     }
 
     @Test
@@ -118,7 +116,7 @@ class ByteArrayBuilderTest {
 
         builder.appendShort(SHORT_F001);
 
-        TestUtil.assertEqual(new byte[]{BYTE_F0, 0x01}, builder.asBytes());
+        assertArrayEquals(new byte[]{BYTE_F0, 0x01}, builder.asBytes());
     }
 
     @Test
@@ -127,7 +125,7 @@ class ByteArrayBuilderTest {
 
         builder.appendLong(LONG);
 
-        TestUtil.assertEqual(new byte[]{(byte) 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08}, builder.asBytes());
+        assertArrayEquals(new byte[]{(byte) 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08}, builder.asBytes());
     }
 
     @Test
@@ -136,7 +134,7 @@ class ByteArrayBuilderTest {
 
         //noinspection MagicNumber
         builder.appendLong(0xff_00_00_00_00_00_ff_00L);
-        TestUtil.assertEqual(new byte[]{BYTE_FF, 0x00, 0x00, 0x00, 0x00, 0x00, BYTE_FF, 0x00}, builder.asBytes());
+        assertArrayEquals(new byte[]{BYTE_FF, 0x00, 0x00, 0x00, 0x00, 0x00, BYTE_FF, 0x00}, builder.asBytes());
     }
 
     @Test
@@ -196,6 +194,7 @@ class ByteArrayBuilderTest {
         assertEquals("Cannot allocate array with size greater than 2147483645 (current size 1 requested extra capacity 2147483645)", exception.getMessage());
     }
 
+    @SuppressWarnings("MagicNumber")
     @Test
     void appendHex() {
         final ByteArrayBuilder builder = ByteArrayBuilder.fromBytes();
@@ -203,8 +202,7 @@ class ByteArrayBuilderTest {
 
         final byte[] bytes = builder.asBytes();
 
-        final byte[] expected = {18, 52, 86, 120, -112, -85, -51, -17};
-        assertTrue(Arrays.equals(bytes, expected), String.format("Got: %s but expected %s", Arrays.toString(bytes), Arrays.toString(expected)));
+        assertArrayEquals(new byte[]{0x12, 0x34, 0x56, 0x78, (byte) 0x90, -85, -51, -17}, bytes);
     }
 
     @Test
@@ -224,7 +222,7 @@ class ByteArrayBuilderTest {
         final byte[] bytes = builder.asBytes();
 
         final byte[] expected = {0, 0, 1, 2};
-        assertTrue(Arrays.equals(bytes, expected), String.format("Got: %s but expected %s", Arrays.toString(bytes), Arrays.toString(expected)));
+        assertArrayEquals(bytes, expected);
     }
 
 }

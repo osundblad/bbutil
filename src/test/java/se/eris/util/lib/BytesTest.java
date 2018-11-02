@@ -3,14 +3,13 @@ package se.eris.util.lib;
 import org.junit.jupiter.api.Test;
 import se.eris.util.Bytes;
 import se.eris.util.Nibble;
-import se.eris.util.TestUtil;
 
 import java.nio.ByteOrder;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SuppressWarnings("MagicNumber")
 class BytesTest {
@@ -42,10 +41,10 @@ class BytesTest {
 
     @Test
     void toByteArray() {
-        TestUtil.assertEqual(new byte[]{0, 0, 0, 17}, Bytes.toByteArray(17, ByteOrder.BIG_ENDIAN));
-        TestUtil.assertEqual(new byte[]{-1, -1, -1, -17}, Bytes.toByteArray(-17, ByteOrder.BIG_ENDIAN));
-        TestUtil.assertEqual(new byte[]{0, 0, 18, 103}, Bytes.toByteArray(4711, ByteOrder.BIG_ENDIAN));
-        TestUtil.assertEqual(new byte[]{-1, -1, -19, -103}, Bytes.toByteArray(-4711, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 0, 17}, Bytes.toByteArray(17, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{-1, -1, -1, -17}, Bytes.toByteArray(-17, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{0, 0, 18, 103}, Bytes.toByteArray(4711, ByteOrder.BIG_ENDIAN));
+        assertArrayEquals(new byte[]{-1, -1, -19, -103}, Bytes.toByteArray(-4711, ByteOrder.BIG_ENDIAN));
     }
 
     @Test

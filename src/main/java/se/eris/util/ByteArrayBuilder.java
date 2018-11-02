@@ -65,16 +65,20 @@ public class ByteArrayBuilder {
         return this;
     }
 
-    public ByteArrayBuilder append(final byte... bytes) {
-        checkIncreaseCapacity(bytes.length);
-        System.arraycopy(bytes, 0, this.bytes, written, bytes.length);
-        written += bytes.length;
-        return this;
+    public ByteArrayBuilder append(final int b) {
+        return appendByte(b);
     }
 
     public ByteArrayBuilder appendByte(final int i) {
         checkIncreaseCapacity(1);
         bytes[written++] = (byte) i;
+        return this;
+    }
+
+    public ByteArrayBuilder append(final byte... bytes) {
+        checkIncreaseCapacity(bytes.length);
+        System.arraycopy(bytes, 0, this.bytes, written, bytes.length);
+        written += bytes.length;
         return this;
     }
 
@@ -190,11 +194,6 @@ public class ByteArrayBuilder {
 
     public byte[] asBytes() {
         return Arrays.copyOfRange(bytes, 0, written);
-    }
-
-
-    public ByteArrayBuilder append(final int b) {
-        return appendByte(b);
     }
 
 }

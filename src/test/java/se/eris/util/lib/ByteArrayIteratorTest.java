@@ -6,11 +6,11 @@ import org.junit.rules.ExpectedException;
 import se.eris.util.ByteArrayIterator;
 import se.eris.util.ByteOrderInt;
 import se.eris.util.ByteOrderShort;
-import se.eris.util.TestUtil;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 @SuppressWarnings("MagicNumber")
 public class ByteArrayIteratorTest {
@@ -91,9 +91,9 @@ public class ByteArrayIteratorTest {
         final byte[] bytes = {0, 1, 2, 3, 4, 5};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
-        TestUtil.assertEqual(new byte[] {0, 1, 2}, iterator.nextByteArray(3));
-        TestUtil.assertEqual(new byte[] {3}, iterator.nextByteArray(1));
-        TestUtil.assertEqual(new byte[] {4, 5}, iterator.nextByteArray(2));
+        assertArrayEquals(new byte[] {0, 1, 2}, iterator.nextByteArray(3));
+        assertArrayEquals(new byte[] {3}, iterator.nextByteArray(1));
+        assertArrayEquals(new byte[] {4, 5}, iterator.nextByteArray(2));
     }
 
     @Test

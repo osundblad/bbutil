@@ -1,8 +1,8 @@
-package se.eris.util.lib;
+package se.eris.util;
 
 import org.junit.jupiter.api.Test;
-import se.eris.util.ByteArrayBuilder;
-import se.eris.util.TestUtil;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 class SampleFT {
 
@@ -14,8 +14,8 @@ class SampleFT {
 
         final byte[] bytes = builder.asBytes();
 
-        final byte[] expected = {18, 52, 86, 120, -112, -85, -51, -17, 0,0,0,17, 16};
-        TestUtil.assertEqual(expected, bytes);
+        final byte[] expected = {0x12, 0x34, 0x56, 0x78, (byte) 0x90, -85, -51, -17, 0,0,0,17, 16};
+        assertArrayEquals(expected, bytes);
     }
 
     @Test
@@ -29,7 +29,7 @@ class SampleFT {
 
         final byte[] expected = {(byte) 0xf0, 0x0f, 0x04, 0x00, 0x05};
         final byte[] bytes = builder.asBytes();
-        TestUtil.assertEqual(expected, bytes);
+        assertArrayEquals(expected, bytes);
     }
 
 }
