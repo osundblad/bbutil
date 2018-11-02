@@ -8,6 +8,7 @@ import se.eris.util.Bits;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -79,5 +80,11 @@ class BitsTest {
     @Test
     void toBitString_float() {
         assertEquals("01000000010010010000111111011011", Bits.toBitString((float) 3.14159265359));
+    }
+
+    @Test
+    void getBit() {
+        assertTrue(Bits.getBit(0b1010_1010, 7));
+        assertFalse(Bits.getBit(0b1010_1010, 6));
     }
 }
