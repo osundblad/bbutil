@@ -15,14 +15,14 @@ public class ByteOrderInt {
         this.shifts = Arrays.copyOf(shifts, shifts.length);
     }
 
-    public int asInt(final byte... bytes) {
-        return asInt(0, bytes);
+    public int asInt(final byte[] bytes) {
+        return asInt(bytes, 0);
     }
 
-    public int asInt(final int offset, final byte... bytes) {
+    public int asInt(final byte[] bytes, final int offset) {
         int value = 0;
         for (int i = 0; i < shifts.length; i++) {
-            value |= bytes[offset + i] << shifts[i];
+            value |= Byte.toUnsignedInt(bytes[offset + i]) << shifts[i];
         }
         return value;
     }

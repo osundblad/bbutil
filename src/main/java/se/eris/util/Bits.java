@@ -10,7 +10,7 @@ import java.util.Set;
  * This is a small utility for communication between different platforms
  * and/or languages. There are methods for converting to/from little/big
  * endian, converting integers and floats to/from byte arrays etc.
- *
+ * <p>
  * If something important is missing please let me know and I'll try to add
  * it to the next version.
  *
@@ -18,6 +18,9 @@ import java.util.Set;
  * @version 2.1
  */
 public final class Bits {
+
+    public static final int BITS_IN_INT = 32;
+    public static final int BITS_IN_BYTE = 8;
 
     /**
      * <p>Constructor that suppress a default constructor, to enforce noninstantiability.</p>
@@ -37,13 +40,12 @@ public final class Bits {
      * @return a string representation of the argument in base 2.
      */
     public static String toBitString(final byte n) {
-        final StringBuilder sb = new StringBuilder(8);
+        final StringBuilder sb = new StringBuilder(BITS_IN_BYTE);
         for (int i = 7; i >= 0; i--) {
-            sb.append((n & (1 << i)) >>> i);
+            sb.append((n & (1 << i)) >> i);
         }
         return sb.toString();
     }
-
 
     /**
      * <p>Returns a String representation of the bits in a byte array. The
@@ -164,12 +166,19 @@ public final class Bits {
             if (aByte != 0) {
                 for (int bit = 0; bit < 8; bit++) {
                     if ((aByte & (1 << bit)) != 0) {
-                        integers.add(byteNo * 8 + bit);
+                        integers.add(byteNo * BITS_IN_BYTE + bit);
                     }
                 }
             }
         }
         return integers;
+    }
+
+    public static int bitsToInt(final int bits, final int offset, final int length) {
+        if (offset < 0 || offset + length > BITS_IN_INT) {
+            throw new IndexOutOfBoundsException();
+        }
+        return (bits >> offset) % (1 << length);
     }
 
 }

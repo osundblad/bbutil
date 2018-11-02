@@ -43,7 +43,7 @@ public class ByteArrayIterator implements Iterator<Byte> {
     }
 
     public int nextInt(final ByteOrderInt byteFormat) {
-        final int i = (byteFormat.asInt(index, bytes));
+        final int i = (byteFormat.asInt(bytes, index));
         index += 4;
         return i;
     }
