@@ -19,8 +19,8 @@ import java.util.Set;
  */
 public final class Bits {
 
-    public static final int BITS_IN_INT = 32;
-    public static final int BITS_IN_BYTE = 8;
+    private static final int BITS_IN_INT = 32;
+    private static final int BITS_IN_BYTE = 8;
 
     /**
      * <p>Constructor that suppress a default constructor, to enforce noninstantiability.</p>
@@ -67,8 +67,8 @@ public final class Bits {
      * (byte[0]) Bytes are separated by byteSpace. The most significant comes
      * first in each byte. The bits are represented by '0' and '1's in the
      * String.</p>
-     * <p>
-     * This is a convenience method just calling:
+     *
+     * <p>This is a convenience method just calling:
      * <pre>
      * {@code
      * ByteArrayFormatter.of(ByteArrayFormatter.FORMAT_BITS, (i) -> byteSpace).asString(ba)
@@ -142,9 +142,9 @@ public final class Bits {
      * otherwise.
      */
     public static boolean getBit(final int source, final int bit) {
+        assert bit >= 0 && bit < BITS_IN_INT;
         return (source & (1 << bit)) != 0;
     }
-
 
     /**
      * <p>Sets the specified bit to 1 if value parameter is true, unsets the
@@ -156,6 +156,7 @@ public final class Bits {
      * @return an <code>int</code> with the specified bit set/unset.
      */
     public static int setBit(final int source, final int bit, final boolean value) {
+        assert bit >= 0 && bit < BITS_IN_INT;
         return value ? source | (1 << bit) : source & ~(1 << bit);
     }
 
@@ -175,10 +176,10 @@ public final class Bits {
     }
 
     public static int bitsToInt(final int bits, final int offset, final int length) {
-        if (offset < 0 || offset + length > BITS_IN_INT) {
-            throw new IndexOutOfBoundsException();
-        }
-        return (bits >> offset) % (1 << length);
+        assert offset >= 0 && offset <= BITS_IN_INT : "offset out of range (0-31): " + offset;
+        assert length >= 0 && length <= BITS_IN_INT : "length out of range (0-32): " + length;
+        assert offset + length <= BITS_IN_INT : "bit index out of range (offset " + offset + " length " + length + ")";
+        return length == BITS_IN_INT ? bits : (bits >>> offset) % (1 << length);
     }
 
 }

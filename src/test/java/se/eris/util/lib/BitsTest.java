@@ -69,12 +69,15 @@ class BitsTest {
     @SuppressWarnings({"ResultOfMethodCallIgnored", "MagicNumber"})
     @Test
     void bitsToInt() {
+        assertEquals(0xaa_aa_aa_aa, Bits.bitsToInt(0xaa_aa_aa_aa, 0, 32));
         assertEquals(0b01010, Bits.bitsToInt(0b11001100_10101010, 4, 5));
         assertEquals(0b00000, Bits.bitsToInt(0b10101010, 8, 5));
         assertEquals(0b0, Bits.bitsToInt(0b11111111, 0, 0));
         assertEquals(0b0, Bits.bitsToInt(0b11111111, 32, 0));
-        assertThrows(IndexOutOfBoundsException.class, () -> Bits.bitsToInt(0b1111_0000, -1, 4));
-        assertThrows(IndexOutOfBoundsException.class, () -> Bits.bitsToInt(0b1111_0000, 0, 33));
+        assertEquals(0b1, Bits.bitsToInt(0b10000000_00000000_00000000_00000000, 31, 1));
+        assertThrows(AssertionError.class, () -> Bits.bitsToInt(0b1111_0000, -1, 4));
+        assertThrows(AssertionError.class, () -> Bits.bitsToInt(0b1111_0000, 24, 9));
+        assertThrows(AssertionError.class, () -> Bits.bitsToInt(0b1111_0000, 0, 33));
     }
 
     @Test
@@ -85,6 +88,9 @@ class BitsTest {
     @Test
     void getBit() {
         assertTrue(Bits.getBit(0b1010_1010, 7));
+        assertFalse(Bits.getBit(0b1010_1010, 0));
+        assertTrue(Bits.getBit(0xff_00_ff_00, 31));
+        assertFalse(Bits.getBit(0x00_ff_00_ff, 31));
         assertFalse(Bits.getBit(0b1010_1010, 6));
     }
 
