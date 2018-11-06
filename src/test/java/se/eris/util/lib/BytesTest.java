@@ -69,6 +69,7 @@ class BytesTest {
         assertThat(Bytes.toBinaryString((byte) 1), is("00000001"));
         assertThat(Bytes.toBinaryString((byte) 0x7f), is("01111111"));
         assertThat(Bytes.toBinaryString((byte) 0xff), is("11111111"));
+        assertThat(Bytes.toBinaryString((byte) 0xf0), is("11110000"));
     }
 
     @Test

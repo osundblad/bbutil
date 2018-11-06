@@ -78,7 +78,7 @@ public final class Bits {
      * @param ba        the <code>byte[]</code> to be converted.
      * @param byteSpace the spacing to use between each byte.
      * @return a string representation of the argument in base 2.
-     * @see ByteArrayFormatter#of(ByteArrayFormatter.ByteFormatFunction, ByteArrayFormatter.IndexFunction)
+     * @see ByteArrayFormatter#of(ByteArrayFormatter.ByteFormatFunction, ByteArrayFormatter.ByteSeparatorFunction)
      */
     public static String toBitString(final byte[] ba, final String byteSpace) {
         return ByteArrayFormatter.of(ByteArrayFormatter.FORMAT_BITS, (i) -> byteSpace).asString(ba);

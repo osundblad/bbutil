@@ -19,12 +19,12 @@ public class Nibble {
 
     public static Nibble fromHex(final String hex) {
         if (hex.length() != 1) {
-            throw new IllegalArgumentException("A Nibbles is one character (0-9a-f");
+            throw new IllegalArgumentException("A Nibble is one character: [0-9a-f]");
         }
-        return fromHexChar(hex.charAt(0));
+        return fromHex(hex.charAt(0));
     }
 
-    public static Nibble fromHexChar(final char hexChar) {
+    public static Nibble fromHex(final char hexChar) {
         if ('0' <= hexChar && hexChar <= '9') {
             return from(hexChar - '0');
         }
@@ -34,12 +34,12 @@ public class Nibble {
         if ('a' <= hexChar && hexChar <= 'f') {
             return from(hexChar - 'a' + 10);
         }
-        throw new IllegalArgumentException(String.format("Illegal character: '%s'", hexChar));
+        throw new IllegalArgumentException(String.format("Illegal character: '%s' (a Nibble is one character: [0-9a-f])", hexChar));
     }
 
     private Nibble(final int value) {
         if (value < MIN_VALUE || value > MAX_VALUE) {
-            throw new IllegalArgumentException(String.format("%d is not a valid nibble value", value));
+            throw new IllegalArgumentException(String.format("Illegal value: %d (allowed values 0x0 - 0xf)", value));
         }
         this.value = (byte) value;
     }

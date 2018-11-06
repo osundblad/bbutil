@@ -102,8 +102,8 @@ public class Bytes {
         final byte[] bytes = new byte[length / 2];
 
         for (int i = 0; i < length; i += 2) {
-            final Nibble highBits = Nibble.fromHexChar(hexString.charAt(i));
-            final Nibble lowBits = Nibble.fromHexChar(hexString.charAt(i + 1));
+            final Nibble highBits = Nibble.fromHex(hexString.charAt(i));
+            final Nibble lowBits = Nibble.fromHex(hexString.charAt(i + 1));
 
             bytes[i / 2] = Bytes.toByte(highBits, lowBits);
         }
@@ -222,4 +222,21 @@ public class Bytes {
         }
         return new String(chars);
     }
+
+    public static String toHex(final byte b) {
+        return String.format("%x", b);
+    }
+
+    public static String toLongHex(final byte b) {
+        return String.format("%02x", b);
+    }
+
+    public static String toJavaHex(final byte b) {
+        return String.format("0x%02x", b);
+    }
+
+    public static String toJavaByte(final byte b) {
+        return String.format("%d", b);
+    }
+
 }

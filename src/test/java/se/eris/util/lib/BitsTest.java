@@ -87,4 +87,21 @@ class BitsTest {
         assertTrue(Bits.getBit(0b1010_1010, 7));
         assertFalse(Bits.getBit(0b1010_1010, 6));
     }
+
+    @Test
+    void toBitString_int() {
+        assertEquals("00000000000000000000000011111111", Bits.toBitString(0x00_00_00_ff));
+        assertEquals("10101010101010101010101010101010", Bits.toBitString(0xAA_AA_AA_AA));
+    }
+
+    @Test
+    void setBit_int() {
+        assertEquals(0xff_ff_ff_ff, Bits.setBit(0xff_ff_ff_ff, 31, true));
+        assertEquals(0xff_ff_ff_ff, Bits.setBit(0x7f_ff_ff_ff, 31, true));
+        assertEquals(0b1010_1011, Bits.setBit(0b101_01010, 0, true));
+
+        assertEquals(0x7f_ff_ff_ff, Bits.setBit(0xff_ff_ff_ff, 31, false));
+        assertEquals(0b1010_1010, Bits.setBit(0b101_01011, 0, false));
+    }
+
 }
