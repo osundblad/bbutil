@@ -1,4 +1,4 @@
-package se.eris.util.lib;
+package se.eris;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -26,12 +26,17 @@ class ByteArrayBuilderTest {
     private static final long LONG = 0x01_02_03_04_05_06_07_08L;
 
     @Test
-    void new_defaultSize() {
+    void withZeroes_defaultSize() {
+        Assertions.assertEquals(7, ByteArrayBuilder.withZeroes(7).capacity());
+    }
+
+    @Test
+    void fromBytes_defaultSize() {
         Assertions.assertEquals(ByteArrayBuilder.DEFAULT_CAPACITY, ByteArrayBuilder.fromBytes().capacity());
     }
 
     @Test
-    void new_defaultGrowFunction() {
+    void withCapacity_defaultGrowFunction() {
         final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(4);
         assertEquals(4, builder.capacity());
         builder.appendInt(4);
@@ -43,7 +48,7 @@ class ByteArrayBuilderTest {
     }
 
     @Test
-    void new_byteArray_extraCapacity_shouldHaveInitialCapacity() {
+    void withCapacity_byteArray_extraCapacity_shouldHaveInitialCapacity() {
         final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(2, new byte[]{1, 2, 3, 4});
 
         assertEquals(4, builder.capacity());
@@ -152,9 +157,29 @@ class ByteArrayBuilderTest {
     @Test
     void grow_overIntegerMaxValue() {
         final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(1);
-        final Executable test = () -> builder.grow(Integer.MAX_VALUE);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, test);
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.grow(Integer.MAX_VALUE));
         assertEquals("Cannot allocate array with size greater than 2147483645 (current size 1 requested extra capacity 2147483647)", exception.getMessage());
+    }
+
+    @Test
+    void grow_overArrayMaxLength() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(1);
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.grow(ByteArrayBuilder.MAX_ARRAY_LENGTH));
+        assertEquals("Cannot allocate array with size greater than 2147483645 (current size 1 requested extra capacity 2147483645)", exception.getMessage());
+    }
+
+    @Test
+    void append_overArrayMaxLength() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withZeroes(ByteArrayBuilder.MAX_ARRAY_LENGTH);
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.append(0xab));
+        assertEquals("Cannot allocate array with size greater than 2147483645 (current size 2147483645 requested extra capacity 1)", exception.getMessage());
+    }
+
+    @Test
+    void append_justBelowArrayMaxLength() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withZeroes(ByteArrayBuilder.MAX_ARRAY_LENGTH - 2);
+        builder.append(0xab);
+        assertEquals(ByteArrayBuilder.MAX_ARRAY_LENGTH, builder.capacity());
     }
 
     @Test
@@ -225,4 +250,17 @@ class ByteArrayBuilderTest {
         assertArrayEquals(bytes, expected);
     }
 
+    @Test
+    void appendByte() {
+        assertArrayEquals(new byte[]{1,2}, ByteArrayBuilder.fromBytes((byte)1).appendByte(2).asBytes());
+    }
+
+    @Test
+    void size() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.fromBytes();
+        assertEquals(0, builder.size());
+
+        builder.appendInt(7);
+        assertEquals(4, builder.size());
+    }
 }

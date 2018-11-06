@@ -56,10 +56,9 @@ public final class Bits {
      * @param ba the <code>byte[]</code> to be converted.
      * @return a string representation of the argument in base 2.
      */
-    public static String toBitString(final byte[] ba) {
+    public static String toBitString(final byte... ba) {
         return toBitString(ba, "");
     }
-
 
     /**
      * <p>Returns a String representation of the bits in a byte array. The
@@ -83,7 +82,6 @@ public final class Bits {
     public static String toBitString(final byte[] ba, final String byteSpace) {
         return ByteArrayFormatter.of(ByteArrayFormatter.FORMAT_BITS, (i) -> byteSpace).asString(ba);
     }
-
 
     /**
      * <p>Returns a String representation of the bits in a float. The String

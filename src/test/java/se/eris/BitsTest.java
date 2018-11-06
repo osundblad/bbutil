@@ -1,4 +1,4 @@
-package se.eris.util.lib;
+package se.eris;
 
 
 import org.junit.jupiter.api.Assertions;
@@ -33,8 +33,9 @@ class BitsTest {
 
     @Test
     void toBitString_byteArray() {
-        final byte[] ba = new byte[]{BYTE_0, BYTE_1, BYTE_2};
-        assertEquals("000000000000000111111111", Bits.toBitString(ba));
+        assertEquals("000000000000000111111111", Bits.toBitString(BYTE_0, BYTE_1, BYTE_2));
+        assertEquals("000000010000000011111111", Bits.toBitString(BYTE_1, BYTE_0, BYTE_2));
+        assertEquals("111111110000000011111111", Bits.toBitString(BYTE_2, BYTE_0, BYTE_2));
     }
 
     /**
@@ -83,6 +84,11 @@ class BitsTest {
     @Test
     void toBitString_float() {
         assertEquals("01000000010010010000111111011011", Bits.toBitString((float) 3.14159265359));
+    }
+
+    @Test
+    void toBitString_float_underscore() {
+        assertEquals("01000000_01001001_00001111_11011011", Bits.toBitString((float) 3.14159265359, "_"));
     }
 
     @Test

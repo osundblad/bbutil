@@ -1,42 +1,41 @@
-package se.eris.util.lib;
+package se.eris;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import se.eris.util.Nibble;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
-public class NibbleTest {
+class NibbleTest {
 
     @Test
-    public void asX_tftf() {
+    void asX_tftf() {
         final Nibble nibble = Nibble.fromBits(true, false, true, false);
 
-        assertThat(nibble.asByte(), is((byte) 10));
-        assertThat(nibble.asInt(), is(10));
-        assertThat(nibble.asHexString(), is("A"));
+        assertEquals((byte) 10, nibble.asByte());
+        assertEquals(10, nibble.asInt());
+        assertEquals("A", nibble.asHexString());
         assertArrayEquals(new boolean[]{true, false, true, false}, nibble.asBitArray());
     }
 
     @Test
-    public void asX_fftf() {
+    void asX_fftf() {
         final Nibble nibble = Nibble.fromBits(false, false, true, false);
 
-        assertThat(nibble.asByte(), is((byte) 2));
-        assertThat(nibble.asInt(), is(2));
-        assertThat(nibble.asHexString(), is("2"));
+        assertEquals((byte) 2, nibble.asByte());
+        assertEquals(2, nibble.asInt());
+        assertEquals("2", nibble.asHexString());
         assertArrayEquals(new boolean[]{false, false, true, false}, nibble.asBitArray());
     }
 
     @Test
-    public void hashcode() {
+    void hashcode() {
         assertNotEquals(Nibble.from(1), Nibble.from(2));
     }
 
     @Test
-    public void toNibbles_byte() {
+    void toNibbles_byte() {
         assertArrayEquals(
                 new Nibble[]{
                         Nibble.from(0b1100),
@@ -45,7 +44,7 @@ public class NibbleTest {
     }
 
     @Test
-    public void toNibbles_short() {
+    void toNibbles_short() {
         assertArrayEquals(
                 new Nibble[]{
                         Nibble.from(0b1100),

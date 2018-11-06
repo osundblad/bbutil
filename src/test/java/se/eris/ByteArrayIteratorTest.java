@@ -1,39 +1,31 @@
-package se.eris.util.lib;
+package se.eris;
 
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import org.junit.jupiter.api.Test;
 import se.eris.util.ByteArrayIterator;
 import se.eris.util.ByteOrderInt;
 import se.eris.util.ByteOrderShort;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SuppressWarnings("MagicNumber")
-public class ByteArrayIteratorTest {
-
-    @Rule
-    public final ExpectedException exception = ExpectedException.none();
+class ByteArrayIteratorTest {
 
     @Test
-    public void hasNext_present() {
+    void hasNext_present() {
         final ByteArrayIterator iterator = new ByteArrayIterator(new byte[]{0});
 
         assertTrue(iterator.hasNext());
     }
 
     @Test
-    public void hasNext_absent() {
+    void hasNext_absent() {
         final ByteArrayIterator iterator = new ByteArrayIterator(new byte[]{});
 
         assertFalse(iterator.hasNext());
     }
 
     @Test
-    public void nextRaw() {
+    void nextRaw() {
         final byte[] bytes = {0, 1, 2, 3, 4, 5};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
@@ -45,7 +37,7 @@ public class ByteArrayIteratorTest {
     }
 
     @Test
-    public void nextShort() {
+    void nextShort() {
         final byte[] bytes = {0, 1, 2, 3};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
@@ -56,7 +48,7 @@ public class ByteArrayIteratorTest {
     }
 
     @Test
-    public void nextShort_littleEndian() {
+    void nextShort_littleEndian() {
         final byte[] bytes = {0, 1, 2, 3};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
@@ -67,7 +59,7 @@ public class ByteArrayIteratorTest {
     }
 
     @Test
-    public void nextInt() {
+    void nextInt() {
         final byte[] bytes = {0, 1, 2, 3};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
@@ -77,7 +69,7 @@ public class ByteArrayIteratorTest {
     }
 
     @Test
-    public void nextInt_littleEndian() {
+    void nextInt_littleEndian() {
         final byte[] bytes = {0, 1, 2, 3};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
@@ -87,7 +79,7 @@ public class ByteArrayIteratorTest {
     }
 
     @Test
-    public void nextByteArray_ok() {
+    void nextByteArray_ok() {
         final byte[] bytes = {0, 1, 2, 3, 4, 5};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 
@@ -97,18 +89,17 @@ public class ByteArrayIteratorTest {
     }
 
     @Test
-    public void nextByteArray_toLong() {
+    void nextByteArray_toLong() {
         final byte[] bytes = {0, 1, 2, 3, 4, 5};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
-
         iterator.skip(4);
-        exception.expect(IndexOutOfBoundsException.class);
-        exception.expectMessage("Attempting to read 3 bytes but only 2 bytes are available");
-        iterator.nextByteArray(3);
+
+        final IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class, () -> iterator.nextByteArray(3));
+        assertEquals("Attempting to read 3 bytes but only 2 bytes are available", exception.getMessage());
     }
 
     @Test
-    public void skip_ok() {
+    void skip_ok() {
         final byte[] bytes = {0, 1, 2, 3, 4, 5};
         final ByteArrayIterator iterator = new ByteArrayIterator(bytes);
 

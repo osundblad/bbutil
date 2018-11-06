@@ -24,13 +24,24 @@ public class ByteArrayBuilder {
         return withCapacity(DEFAULT_CAPACITY, bytes);
     }
 
+    public static ByteArrayBuilder withZeroes(final int length) {
+        return new ByteArrayBuilder(length);
+    }
+
     public static ByteArrayBuilder withCapacity(final int capacity, final byte... bytes) {
         return new ByteArrayBuilder(capacity, bytes);
     }
 
     private ByteArrayBuilder(final int capacity, final byte... bytes) {
+        assert capacity <= MAX_ARRAY_LENGTH : "Java does not allow arrays longer than " + MAX_ARRAY_LENGTH;
         this.bytes = Arrays.copyOf(bytes, Math.max(bytes.length, capacity));
         written = bytes.length;
+    }
+
+    private ByteArrayBuilder(final int length) {
+        assert length <= MAX_ARRAY_LENGTH : "Java does not allow arrays longer than " + MAX_ARRAY_LENGTH;
+        this.bytes = new byte[length];
+        written = length;
     }
 
     public ByteArrayBuilder append(final byte b) {
@@ -141,21 +152,22 @@ public class ByteArrayBuilder {
      */
     public int grow(final int noOfBytes) {
         validateNonNegative("noOfBytes cannot be negative (%d)", noOfBytes);
-        validateFinalSize(bytes.length, noOfBytes);
+        validateFinalSize(noOfBytes);
 
         bytes = Arrays.copyOf(bytes, bytes.length + noOfBytes);
         return bytes.length;
     }
 
     private void checkIncreaseCapacity(final int add) {
-        if (written + add > bytes.length) {
-            internalGrow(add);
+        final int minCapacity = written + add;
+        if (minCapacity > 0 && minCapacity > bytes.length) {
+            internalGrow(minCapacity - bytes.length);
         }
     }
 
     private void internalGrow(final int minAdd) {
         final int extraCapacity = calculateExtraCapacity(minAdd);
-        validateFinalSize(bytes.length, extraCapacity);
+        validateFinalSize(extraCapacity);
 
         bytes = Arrays.copyOf(bytes, bytes.length + extraCapacity);
     }
@@ -163,7 +175,11 @@ public class ByteArrayBuilder {
     private int calculateExtraCapacity(final int minAdd) {
         final int growth = DEFAULT_GROW_FUNCTION.applyAsInt(bytes.length);
         if (bytes.length + growth > MAX_ARRAY_LENGTH || bytes.length + growth < 0) {
-            return MAX_ARRAY_LENGTH - bytes.length;
+            final int extraCapacity = MAX_ARRAY_LENGTH - bytes.length;
+            if (minAdd > extraCapacity) {
+                throw new IllegalArgumentException("Cannot allocate array with size greater than " + MAX_ARRAY_LENGTH + " (current size " + bytes.length + " requested extra capacity " + minAdd + ")");
+            }
+            return extraCapacity;
         }
         return Math.max(growth, minAdd);
     }
@@ -174,10 +190,10 @@ public class ByteArrayBuilder {
         }
     }
 
-    private void validateFinalSize(final int currentSize, final int extraCapacity) {
-        final int newSize = currentSize + extraCapacity;
+    private void validateFinalSize(final int extraCapacity) {
+        final int newSize = bytes.length + extraCapacity;
         if (newSize <= 0 || newSize > MAX_ARRAY_LENGTH) {
-            throw new IllegalArgumentException("Cannot allocate array with size greater than " + MAX_ARRAY_LENGTH + " (current size " + currentSize + " requested extra capacity " + extraCapacity + ")");
+            throw new IllegalArgumentException("Cannot allocate array with size greater than " + MAX_ARRAY_LENGTH + " (current size " + bytes.length + " requested extra capacity " + extraCapacity + ")");
         }
     }
 

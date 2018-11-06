@@ -1,4 +1,4 @@
-package se.eris.util.lib;
+package se.eris;
 
 import org.junit.jupiter.api.Test;
 import se.eris.util.ByteBitIterator;

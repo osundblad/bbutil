@@ -1,4 +1,4 @@
-package se.eris.util.lib;
+package se.eris;
 
 import org.junit.jupiter.api.Test;
 import se.eris.util.Bytes;
@@ -6,8 +6,6 @@ import se.eris.util.Nibble;
 
 import java.nio.ByteOrder;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -65,11 +63,11 @@ class BytesTest {
 
     @Test
     void toBinaryString() {
-        assertThat(Bytes.toBinaryString((byte) 0), is("00000000"));
-        assertThat(Bytes.toBinaryString((byte) 1), is("00000001"));
-        assertThat(Bytes.toBinaryString((byte) 0x7f), is("01111111"));
-        assertThat(Bytes.toBinaryString((byte) 0xff), is("11111111"));
-        assertThat(Bytes.toBinaryString((byte) 0xf0), is("11110000"));
+        assertEquals("00000000", Bytes.toBinaryString((byte) 0));
+        assertEquals("00000001", Bytes.toBinaryString((byte) 1));
+        assertEquals("01111111", Bytes.toBinaryString((byte) 0x7f));
+        assertEquals("11111111", Bytes.toBinaryString((byte) 0xff));
+        assertEquals("11110000", Bytes.toBinaryString((byte) 0xf0));
     }
 
     @Test
