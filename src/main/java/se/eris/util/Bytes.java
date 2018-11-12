@@ -4,6 +4,8 @@ import java.nio.ByteOrder;
 
 public class Bytes {
 
+    public static final int NOT_FOUND = -1;
+
     /**
      * Note this method mutate the supplied array.
      *
@@ -237,6 +239,43 @@ public class Bytes {
 
     public static String toJavaByte(final byte b) {
         return String.format("%d", b);
+    }
+
+    /**
+     * @param b the byte to search for.
+     * @param bytes
+     * @return the index of the first occurrence of the byte, or -1 if byte is not in array.
+     */
+    public static int indexOf(final byte b, final byte... bytes) {
+        return indexOf(b, 0, bytes);
+    }
+
+    /**
+     * @param b the byte to search for.
+     * @param from the index to start the search from.
+     * @param bytes
+     * @return the index of the first occurrence of the byte, or -1 if byte is not in array.
+     */
+    public static int indexOf(final byte b, final int from, final byte... bytes) {
+        for (int index = from; index < bytes.length; index++) {
+            if (b == bytes[index]) {
+                return index;
+            }
+        }
+        return NOT_FOUND;
+    }
+
+    /**
+     * Interprets ints as bytes for easy byte array creation.
+     * @param bytes
+     * @return
+     */
+    public static byte[] intsAsBytes(final int... bytes) {
+        final byte[] result = new byte[bytes.length];
+        for (int i = 0; i < bytes.length; i++) {
+            result[i] = (byte) bytes[i];
+        }
+        return result;
     }
 
 }

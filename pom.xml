@@ -5,7 +5,7 @@
     <name>Bit and Byte Util</name>
     <groupId>se.eris.util</groupId>
     <artifactId>bbutil</artifactId>
-    <version>2.1-beta</version>
+    <version>2.1.1-SNAPSHOT</version>
 
     <description>A small util for manipulation of Bytes and Bits.</description>
 

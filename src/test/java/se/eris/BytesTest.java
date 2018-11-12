@@ -97,4 +97,12 @@ class BytesTest {
         assertEquals((byte) 0xab, Bytes.toByte(Nibble.from(0xa), Nibble.from(0xb)));
     }
 
+    @Test
+    void indexOf() {
+        assertEquals(0, Bytes.indexOf((byte) 0, (byte) 0,(byte) 1, (byte) 2));
+        assertEquals(1, Bytes.indexOf((byte) 1, (byte) 0,(byte) 1, (byte) 2));
+        assertEquals(Bytes.NOT_FOUND, Bytes.indexOf((byte) 3, (byte) 0, (byte) 1, (byte) 2));
+    }
+
+
 }

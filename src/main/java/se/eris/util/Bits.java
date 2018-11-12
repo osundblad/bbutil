@@ -20,6 +20,7 @@ import java.util.Set;
 public final class Bits {
 
     private static final int BITS_IN_INT = 32;
+    private static final int BITS_IN_SHORT = 16;
     private static final int BITS_IN_BYTE = 8;
 
     /**
@@ -173,11 +174,23 @@ public final class Bits {
         return integers;
     }
 
+    public static byte bitsToByte(final int bits, final int offset, final int length) {
+        return (byte) bitsToIntInternal(bits, offset, length, BITS_IN_BYTE);
+    }
+
+    public static short bitsToShort(final int bits, final int offset, final int length) {
+        return (short) bitsToIntInternal(bits, offset, length, BITS_IN_SHORT);
+    }
+
     public static int bitsToInt(final int bits, final int offset, final int length) {
-        assert offset >= 0 && offset <= BITS_IN_INT : "offset out of range (0-31): " + offset;
-        assert length >= 0 && length <= BITS_IN_INT : "length out of range (0-32): " + length;
-        assert offset + length <= BITS_IN_INT : "bit index out of range (offset " + offset + " length " + length + ")";
-        return length == BITS_IN_INT ? bits : (bits >>> offset) % (1 << length);
+        return bitsToIntInternal(bits, offset, length, BITS_IN_INT);
+    }
+
+    private static int bitsToIntInternal(final int bits, final int offset, final int length, final int bitsInResultType) {
+        assert offset >= 0 && offset <= bitsInResultType : "offset out of range (0-" + bitsInResultType + "): " + offset;
+        assert length >= 0 && length <= bitsInResultType : "length out of range (0-" + bitsInResultType + "): " + length;
+        assert offset + length <= bitsInResultType : "bit index out of range (offset " + offset + " length " + length + ")";
+        return length == bitsInResultType ? bits : (bits >>> offset) % (1 << length);
     }
 
 }

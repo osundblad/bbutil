@@ -1,18 +1,12 @@
 package se.eris.util;
 
-import java.util.Arrays;
-
-public class ByteOrderShort {
+public class ByteOrderShort extends ByteOrderBase {
 
     public static final ByteOrderShort BIG_ENDIAN = new ByteOrderShort("Short BigEndian", new int[]{8, 0});
     public static final ByteOrderShort LITTLE_ENDIAN = new ByteOrderShort("Short LittleEndian", new int[]{0, 8});
 
-    private final String name;
-    private final int[] shifts;
-
     public ByteOrderShort(final String name, final int[] shifts) {
-        this.name = name;
-        this.shifts = Arrays.copyOf(shifts, shifts.length);
+        super(name, shifts);
     }
 
     public short asShort(final byte[] bytes) {
@@ -20,19 +14,7 @@ public class ByteOrderShort {
     }
 
     public short asShort(final byte[] bytes, final int offset) {
-        int value = 0;
-        for (int i = 0; i < shifts.length; i++) {
-            value |= Byte.toUnsignedInt(bytes[offset + i]) << shifts[i];
-        }
-        return (short) value;
-    }
-
-    public byte[] asArray(final int value) {
-        final byte[] ba = new byte[shifts.length];
-        for (int i = 0; i < shifts.length; i++) {
-            ba[i] = (byte) (value >>> shifts[i]);
-        }
-        return ba;
+        return (short) asInt(bytes, offset);
     }
 
     public short reverse(final short s) {

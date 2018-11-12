@@ -18,6 +18,14 @@ class ByteOrderShortTest {
         assertEquals((short) 0x82f1, ByteOrderShort.BIG_ENDIAN.asShort(new byte[]{0x11, (byte) 0x82, (byte) 0xf1}, 1));
     }
 
+    @Test
+    void asInt() {
+        Assertions.assertEquals(0x0804, ByteOrderShort.BIG_ENDIAN.asInt(new byte[]{0x12, (byte) 8, (byte) 4}, 1));
+        assertEquals(0x0408, ByteOrderShort.LITTLE_ENDIAN.asInt(new byte[]{(byte) 8, (byte) 4}, 0));
+        assertEquals(0x82f1, ByteOrderShort.BIG_ENDIAN.asInt(new byte[]{(byte) 0x82, (byte) 0xf1}));
+        assertEquals(0x82f1, ByteOrderShort.BIG_ENDIAN.asInt(new byte[]{0x11, (byte) 0x82, (byte) 0xf1}, 1));
+    }
+
     @SuppressWarnings("MagicNumber")
     @Test
     void asArray() {
