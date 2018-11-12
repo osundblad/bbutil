@@ -26,6 +26,15 @@
         </license>
     </licenses>
 
+    <developers>
+        <developer>
+            <name>Olle Sundblad</name>
+            <email>olle@eris.se</email>
+            <organization>Eris IT</organization>
+            <organizationUrl>http://www.eris.se</organizationUrl>
+        </developer>
+    </developers>
+
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
