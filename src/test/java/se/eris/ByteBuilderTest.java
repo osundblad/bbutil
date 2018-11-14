@@ -14,16 +14,16 @@ class ByteBuilderTest {
         final byte result = ByteBuilder.empty().append(true, false, true, false, true, false, true, false).build();
 
         //noinspection MagicNumber
-        assertEquals(result, (byte) 0b10101010);
+        assertEquals((byte) 0b10101010, result);
     }
 
     @Test
-    void append_4bits_ok() {
+    void append_5bits_ok() {
         final ByteBuilder builder = ByteBuilder.empty().append(true, true);
-        builder.append(false, true, false, true);
+        builder.append(true, false, true, false, true);
 
         //noinspection MagicNumber
-        assertEquals(builder.build(), (byte) 0b11010100);
+        assertEquals((byte) 0b0_10101_11, builder.build());
     }
 
     @Test
@@ -32,12 +32,12 @@ class ByteBuilderTest {
         builder.append(Nibble.fromBits(false, true, false, true));
 
         //noinspection MagicNumber
-        assertEquals(builder.build(), (byte) 0b11010100);
+        assertEquals((byte) 0b00_0101_11, builder.build());
     }
 
     @Test
     void append_empty9bits_fail() {
-        assertThrows(IllegalStateException.class, () -> ByteBuilder.empty().append(true, false, true, false, true, false, true, false, true));
+        assertThrows(IllegalArgumentException.class, () -> ByteBuilder.empty().append(true, false, true, false, true, false, true, false, true));
     }
 
     @Test
@@ -47,7 +47,15 @@ class ByteBuilderTest {
                 .append(Nibble.from(0b0011));
 
         //noinspection MagicNumber
-        assertEquals(builder.build(), (byte) 0b10110011);
+        assertEquals((byte) 0b0011_1011, builder.build());
+    }
+
+    @Test
+    void appendBits() {
+        final ByteBuilder builder = ByteBuilder.empty()
+                .appendBits(0b11_1110, 2);
+
+        assertEquals((byte) 0b000000_10, builder.build());
     }
 
     @Test
@@ -55,15 +63,15 @@ class ByteBuilderTest {
         final byte result = ByteBuilder.empty().append(Nibble.from(0b1011)).build();
 
         //noinspection MagicNumber
-        assertEquals(result, (byte) 0b10110000);
+        assertEquals((byte) 0b0000_1011, result);
     }
 
     @Test
     void set_0to7_shouldWork() {
         final ByteBuilder empty = ByteBuilder.empty();
         for (int i = 0; i < 8; i++) {
-            assertEquals(empty.setBit(i, true).build(), (byte) (1<< i));
-            assertEquals(empty.setBit(i, false).build(), (byte) 0);
+            assertEquals((byte) (1<< i), empty.setBit(i, true).build());
+            assertEquals((byte) 0, empty.setBit(i, false).build());
         }
     }
 

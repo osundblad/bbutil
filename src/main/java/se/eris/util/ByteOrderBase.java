@@ -2,10 +2,10 @@ package se.eris.util;
 
 import java.util.Arrays;
 
-public class ByteOrderBase {
+public abstract class ByteOrderBase {
 
     protected final String name;
-    protected final int[] shifts;
+    private final int[] shifts;
 
     protected ByteOrderBase(final String name, final int[] shifts) {
         this.name = name;

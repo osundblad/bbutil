@@ -2,7 +2,7 @@ package se.eris.util;
 
 import java.util.Iterator;
 
-public class ByteBitIterator implements Iterator<Boolean> {
+public class BitByteIterator implements Iterator<Boolean> {
 
     private static final int HIGHEST_BIT_POS = 7;
 
@@ -10,15 +10,15 @@ public class ByteBitIterator implements Iterator<Boolean> {
     private final byte value;
     private int pos;
 
-    public static ByteBitIterator from(final byte value, final boolean fromLeastSignificantBit) {
-        return new ByteBitIterator(value, fromLeastSignificantBit);
+    public static BitByteIterator from(final byte value, final boolean fromLeastSignificantBit) {
+        return new BitByteIterator(value, fromLeastSignificantBit);
     }
 
-    public static ByteBitIterator from(final byte value) {
-        return new ByteBitIterator(value, true);
+    public static BitByteIterator from(final byte value) {
+        return new BitByteIterator(value, true);
     }
 
-    private ByteBitIterator(final byte value, final boolean fromLeastSignificantBit) {
+    private BitByteIterator(final byte value, final boolean fromLeastSignificantBit) {
         this.value = value;
         this.fromLeastSignificantBit = fromLeastSignificantBit;
         pos = fromLeastSignificantBit ? 0 : HIGHEST_BIT_POS;

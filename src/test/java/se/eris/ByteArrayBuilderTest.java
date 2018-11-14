@@ -168,19 +168,19 @@ class ByteArrayBuilderTest {
         assertEquals("Cannot allocate array with size greater than 2147483645 (current size 1 requested extra capacity 2147483645)", exception.getMessage());
     }
 
-    @Test
-    void append_overArrayMaxLength() {
-        final ByteArrayBuilder builder = ByteArrayBuilder.withZeroes(ByteArrayBuilder.MAX_ARRAY_LENGTH);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.append(0xab));
-        assertEquals("Cannot allocate array with size greater than 2147483645 (current size 2147483645 requested extra capacity 1)", exception.getMessage());
-    }
-
-    @Test
-    void append_justBelowArrayMaxLength() {
-        final ByteArrayBuilder builder = ByteArrayBuilder.withZeroes(ByteArrayBuilder.MAX_ARRAY_LENGTH - 2);
-        builder.append(0xab);
-        assertEquals(ByteArrayBuilder.MAX_ARRAY_LENGTH, builder.capacity());
-    }
+//    @Test
+//    void append_overArrayMaxLength() {
+//        final ByteArrayBuilder builder = ByteArrayBuilder.withZeroes(ByteArrayBuilder.MAX_ARRAY_LENGTH);
+//        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.append(0xab));
+//        assertEquals("Cannot allocate array with size greater than 2147483645 (current size 2147483645 requested extra capacity 1)", exception.getMessage());
+//    }
+//
+//    @Test
+//    void append_justBelowArrayMaxLength() {
+//        final ByteArrayBuilder builder = ByteArrayBuilder.withZeroes(ByteArrayBuilder.MAX_ARRAY_LENGTH - 2);
+//        builder.append(0xab);
+//        assertEquals(ByteArrayBuilder.MAX_ARRAY_LENGTH, builder.capacity());
+//    }
 
     @Test
     void grow_zeroToMaxArrayLength_shouldWork() {
@@ -207,6 +207,17 @@ class ByteArrayBuilderTest {
 
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> builder.grow(-1));
         assertEquals("noOfBytes cannot be negative (-1)", exception.getMessage());
+    }
+
+    @Test
+    void defaultGrow() {
+        final ByteArrayBuilder builder = ByteArrayBuilder.withCapacity(8);
+
+        builder.appendInt(4);
+        builder.appendByte(1);
+        builder.appendInt(4);
+
+        assertEquals(12, builder.capacity());
     }
 
     @Test

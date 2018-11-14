@@ -19,9 +19,9 @@ import java.util.Set;
  */
 public final class Bits {
 
-    private static final int BITS_IN_INT = 32;
-    private static final int BITS_IN_SHORT = 16;
-    private static final int BITS_IN_BYTE = 8;
+    public static final int BITS_IN_INT = 32;
+    public static final int BITS_IN_SHORT = 16;
+    public static final int BITS_IN_BYTE = 8;
 
     /**
      * <p>Constructor that suppress a default constructor, to enforce noninstantiability.</p>

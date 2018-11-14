@@ -2,8 +2,8 @@ package se.eris.util;
 
 public class Nibble {
 
-    public static final byte MAX_VALUE = 0x0f;
-    public static final byte MIN_VALUE = 0x00;
+    public static final byte MAX_VALUE = 0xf;
+    public static final byte MIN_VALUE = 0x0;
 
     private static final String HEX_CHARACTERS = "0123456789ABCDEF";
 

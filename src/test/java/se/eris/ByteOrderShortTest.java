@@ -33,4 +33,9 @@ class ByteOrderShortTest {
         assertArrayEquals(new byte[]{(byte) 0x04, (byte) 0xf8}, ByteOrderShort.LITTLE_ENDIAN.asArray(0xf804));
     }
 
+    @Test
+    void reverse() {
+        assertEquals(0x21_fe, ByteOrderShort.reverse((short) 0xfe_21));
+    }
+
 }
